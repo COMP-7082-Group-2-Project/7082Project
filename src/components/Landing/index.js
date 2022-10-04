@@ -11,9 +11,9 @@ import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
 
 import {
-    LandingNav, DropdownContainer, DropdownWrapper,
-    LandingContainer, CodeWrapper, OutputContainer,
-    InputWrapper, ExecuteButton
+    LandingNav, LandingContainer, DropdownContainer,
+    DropdownWrapper, MainContainer, CodeWrapper,
+    OutputContainer, InputWrapper, ExecuteButton
 } from "./LandingStyles";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -195,40 +195,43 @@ const Landing = () => {
                 pauseOnHover
             />
             <LandingNav></LandingNav>
-            <DropdownContainer>
-                <DropdownWrapper>
-                    <LanguageDropdown onSelectChange={onSelectChange} />
-                </DropdownWrapper>
-                <DropdownWrapper>
-                    <ThemeDropdown
-                        handleThemeChange={handleThemeChange}
-                        theme={theme}
-                    />
-                </DropdownWrapper>
-            </DropdownContainer>
             <LandingContainer>
-                <CodeWrapper>
-                    <CodeEditor
-                        code={code}
-                        onChange={onChange}
-                        language={language?.value}
-                        theme={theme.value}
-                    />
-                </CodeWrapper>
-
-                <OutputContainer>
-                    <OutputWindow outputDetails={outputDetails} />
-                    <InputWrapper>
-                        <CustomInput
-                            customInput={customInput}
-                            setCustomInput={setCustomInput}
+                <DropdownContainer>
+                    <DropdownWrapper>
+                        <LanguageDropdown onSelectChange={onSelectChange} />
+                    </DropdownWrapper>
+                    <DropdownWrapper>
+                        <ThemeDropdown
+                            handleThemeChange={handleThemeChange}
+                            theme={theme}
                         />
-                        <ExecuteButton onClick={handleCompile} disabled={!code}>
-                            {processing ? "Processing..." : "Compile and Execute"}
-                        </ExecuteButton>
-                    </InputWrapper>
-                    {outputDetails && <OutputDetails outputDetails={outputDetails} />}
-                </OutputContainer>
+                    </DropdownWrapper>
+                </DropdownContainer>
+
+                <MainContainer>
+                    <CodeWrapper>
+                        <CodeEditor
+                            code={code}
+                            onChange={onChange}
+                            language={language?.value}
+                            theme={theme.value}
+                        />
+                    </CodeWrapper>
+
+                    <OutputContainer>
+                        <OutputWindow outputDetails={outputDetails} />
+                        <InputWrapper>
+                            <CustomInput
+                                customInput={customInput}
+                                setCustomInput={setCustomInput}
+                            />
+                            <ExecuteButton onClick={handleCompile} disabled={!code}>
+                                {processing ? "Processing..." : "Compile and Execute"}
+                            </ExecuteButton>
+                        </InputWrapper>
+                        {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+                    </OutputContainer>
+                </MainContainer>
             </LandingContainer>
         </>
     )

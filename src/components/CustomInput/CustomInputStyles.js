@@ -11,6 +11,7 @@ export const InputArea = styled.textarea`
     margin-top: 0.5rem;
     background-color: #fff;
     transition: all 0.2s;
+    resize: none;
 
     &:hover {
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1),

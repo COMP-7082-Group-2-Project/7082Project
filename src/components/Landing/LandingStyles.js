@@ -11,29 +11,24 @@ export const DropdownContainer = styled.div`
 `
 
 export const DropdownWrapper = styled.div`
-    padding: 0.5rem 1rem;
+    padding: 1rem;
 `
 
 export const LandingContainer = styled.div`
+    width: 98%;
+    margin: 0 auto;
+`
+
+export const MainContainer = styled.div`
     display: flex;
-    align-items: flex-start;
-    padding: 1rem;
-    margin-left: 1rem;
+    gap: 2rem;
 `
 
 export const CodeWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-end;
-    width: 100%;
-    height: 100%;
+    width: 70%;
 `
 
 export const OutputContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
     width: 30%;
 `
 
