@@ -26,7 +26,7 @@ const OutputWindow = ({ outputDetails }) => {
 
     return (
         <>
-            <OutputTitle>Output</OutputTitle>
+            <OutputTitle>Outputt</OutputTitle>
             <OutputScreen>
                 {outputDetails ? getOutput() : null}
             </OutputScreen>
