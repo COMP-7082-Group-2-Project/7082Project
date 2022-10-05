@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { defineTheme } from "../../lib/defineTheme";
 import { LanguageOptions } from "../../data/LanguageOptions";
 
@@ -72,15 +72,6 @@ const Landing = () => {
         setLanguage(sl);
     }
 
-    // Key press handlers
-    useEffect(() => {
-        if (enterPress && ctrlPress) {
-            console.log("enterPress", enterPress);
-            console.log("ctrlPress", ctrlPress);
-            handleCompile();
-        }
-    }, [ctrlPress, enterPress]);
-
     const onChange = (action, data) => {
         switch (action) {
             case "code":
@@ -92,7 +83,44 @@ const Landing = () => {
         }
     }
 
-    const handleCompile = () => {
+    const checkStatus = useCallback(async (token) => {
+        const options = {
+            method: "GET",
+            url: "https://judge0-ce.p.rapidapi.com/submissions/" + token,
+            params: { base64_encoded: "true", fields: "*" },
+            headers: {
+                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
+                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
+            }
+        }
+
+        try {
+            let response = await axios.request(options);
+            let statusId = response.data.status?.id;
+
+            // Check for status
+            if (statusId === 1 || statusId === 2) {
+                // Still processing (try again)
+                setTimeout(() => {
+                    checkStatus(token);
+                }, 2000)
+
+                return;
+            } else {
+                setProcessing(false);
+                setOutputDetails(response.data);
+                showSuccessToast("Compiled Successfully!");
+                console.log("response.data", response.data);
+                return;
+            }
+        } catch (error) {
+            console.log("err", error);
+            setProcessing(false);
+            showErrorToast();
+        }
+    }, []);
+
+    const handleCompile = useCallback(() => {
         setProcessing(true);
 
         console.log(customInput);
@@ -134,44 +162,16 @@ const Landing = () => {
 
             setProcessing(false);
         })
-    }
+    }, [language, code, customInput, checkStatus]);
 
-    const checkStatus = async (token) => {
-        const options = {
-            method: "GET",
-            url: "https://judge0-ce.p.rapidapi.com/submissions/" + token,
-            params: { base64_encoded: "true", fields: "*" },
-            headers: {
-                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
-            }
+    // Key press handlers
+    useEffect(() => {
+        if (enterPress && ctrlPress) {
+            console.log("enterPress", enterPress);
+            console.log("ctrlPress", ctrlPress);
+            handleCompile();
         }
-
-        try {
-            let response = await axios.request(options);
-            let statusId = response.data.status?.id;
-
-            // Check for status
-            if (statusId === 1 || statusId === 2) {
-                // Still processing (try again)
-                setTimeout(() => {
-                    checkStatus(token);
-                }, 2000)
-
-                return;
-            } else {
-                setProcessing(false);
-                setOutputDetails(response.data);
-                showSuccessToast("Compiled Successfully!");
-                console.log("response.data", response.data);
-                return;
-            }
-        } catch (error) {
-            console.log("err", error);
-            setProcessing(false);
-            showErrorToast();
-        }
-    }
+    }, [ctrlPress, enterPress, handleCompile]);
 
     function handleThemeChange(th) {
         const theme = th;
