@@ -22,7 +22,8 @@ jobs:
       
       - name: Set Environment Variables
         uses: netlify/actions/cli@master
-        args: env:set FIRST_NAME Mona
+        with:
+          args: env:set FIRST_NAME Mona
       
       - name: Deploy
         uses: netlify/actions/cli@master
