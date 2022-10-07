@@ -86,7 +86,7 @@ const Landing = () => {
     const checkStatus = useCallback(async (token) => {
         const options = {
             method: "GET",
-            url: process.env.REACT_APP_RAPID_API_URL + '/' + token,
+            url: "https://judge0-ce.p.rapidapi.com/submissions/" + token,
             params: { base64_encoded: "true", fields: "*" },
             headers: {
                 "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
@@ -134,7 +134,7 @@ const Landing = () => {
 
         const options = {
             method: "POST",
-            url: process.env.REACT_APP_RAPID_API_URL,
+            url: "https://judge0-ce.p.rapidapi.com/submissions",
             params: { base64_encoded: "true", fields: "*" },
             headers: {
                 "content-type": "application/json",
