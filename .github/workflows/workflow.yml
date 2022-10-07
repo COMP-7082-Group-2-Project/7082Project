@@ -1,4 +1,4 @@
-name: Github Pages Deploy
+name: Netlify Deploy
 
 on:
   push:
@@ -15,17 +15,17 @@ jobs:
     
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       
       - name: Install and build
         run: npm install && npm run build
-        env:
-          REACT_APP_RAPID_API_HOST: ${{ secrets.REACT_APP_RAPID_API_HOST }}
-          REACT_APP_RAPID_API_KEY: ${{ secrets.REACT_APP_RAPID_API_KEY }}
-          REACT_APP_RAPID_API_URL: ${{ secrets.REACT_APP_RAPID_API_URL }}
       
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: nwtgck/actions-netlify@v1.2
         with:
-          branch: gh-pages
-          folder: build
+          publish-dir: './build'
+          production-branch: master
+          deploy-message: '${{ github.event.head_commit.message }}'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
