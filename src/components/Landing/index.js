@@ -123,6 +123,9 @@ const Landing = () => {
     const handleCompile = useCallback(async () => {
         setProcessing(true);
 
+        console.log(process.env);
+        console.log(process.env.NETLIFY_AUTH_TOKEN);
+
         // Form data to send
         const formData = {
             language_id: language.id,
