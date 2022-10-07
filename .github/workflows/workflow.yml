@@ -17,6 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
+      - name: Create .env file
+        run: |
+          touch .env
+          echo REACT_APP_RAPID_API_HOST=${{ secrets.REACT_APP_RAPID_API_HOST }} >> .env
+          echo REACT_APP_RAPID_API_KEY=${{ secrets.REACT_APP_RAPID_API_KEY }} >> .env
+      
       - name: Install and build
         run: npm install && npm run build
       
@@ -26,7 +32,4 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          args: |
-            env:set FIRST_NAME "Mona"
-            env:set LAST_NAME "Johnson"
-            deploy --dir=build --prod
+          args: deploy --dir=build --prod
