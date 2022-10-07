@@ -1,31 +1,17 @@
-# name: Netlify Deploy
+name: Netlify Deploy
 
-# on:
-#   push:
-#     branches:
-#       - "master"
+on:
+  push:
+    branches:
+      - "master"
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         node-version: [16.x]
+jobs:
+  build:
+    runs-on: ubuntu-latest
     
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       
-#       - name: Install and build
-#         run: npm install && npm run build
-      
-#       - name: Deploy
-#         uses: nwtgck/actions-netlify@v1.2
-#         with:
-#           publish-dir: './build'
-#           production-branch: master
-#           deploy-message: '${{ github.event.head_commit.message }}'
-#         env:
-#           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-#           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy
+        run: curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
