@@ -19,6 +19,10 @@ jobs:
       
       - name: Install and build
         run: npm install && npm run build
+        env:
+          REACT_APP_RAPID_API_HOST: ${{ secrets.REACT_APP_RAPID_API_HOST }}
+          REACT_APP_RAPID_API_KEY: ${{ secrets.REACT_APP_RAPID_API_KEY }}
+          REACT_APP_RAPID_API_URL: ${{ secrets.REACT_APP_RAPID_API_URL }}
       
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
