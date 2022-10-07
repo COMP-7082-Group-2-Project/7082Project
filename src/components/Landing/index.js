@@ -125,6 +125,8 @@ const Landing = () => {
 
         console.log(process.env);
         console.log(process.env.NETLIFY_AUTH_TOKEN);
+        console.log(process.env.REACT_APP_RAPID_API_HOST);
+        console.log(process.env.REACT_APP_RAPID_API_KEY);
 
         // Form data to send
         const formData = {
