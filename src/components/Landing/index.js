@@ -124,6 +124,8 @@ const Landing = () => {
         setProcessing(true);
 
         console.log(customInput);
+        console.log(process.env);
+        console.log(process.env.REACT_APP_RAPID_API_KEY);
 
         // Form data to send
         const formData = {
