@@ -120,12 +120,8 @@ const Landing = () => {
         }
     }, []);
 
-    const handleCompile = useCallback(() => {
+    const handleCompile = useCallback(async () => {
         setProcessing(true);
-
-        console.log(customInput);
-        console.log(process.env);
-        console.log(process.env.REACT_APP_RAPID_API_KEY);
 
         // Form data to send
         const formData = {
@@ -141,8 +137,8 @@ const Landing = () => {
             headers: {
                 "content-type": "application/json",
                 "Content-Type": "application/json",
-                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST || "judge0-ce.p.rapidapi.com",
-                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY || "eaccab9284msh7cb8ba88fdc8aa7p1bf259jsne401fedbbb26"
+                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
+                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
             },
             data: formData
         }
