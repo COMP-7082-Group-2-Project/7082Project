@@ -26,4 +26,5 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          args: env:set FIRST_NAME Mona && deploy --dir=build --prod
+          args: env:set FIRST_NAME Mona
+          args: deploy --dir=build --prod
