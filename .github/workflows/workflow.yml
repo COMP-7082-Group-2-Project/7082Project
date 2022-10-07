@@ -6,12 +6,25 @@ on:
       - "master"
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
     
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       
+      - name: Install and build
+        run: npm install && npm run build
+      
       - name: Deploy
-        run: curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=build --prod
+          secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
