@@ -20,8 +20,11 @@ jobs:
       - name: Install and build
         run: npm install && npm run build
       
-      - name: Set Environment Variables
+      - name: Environment Variables
         uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
           args: env:set FIRST_NAME Mona
       
