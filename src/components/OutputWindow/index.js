@@ -24,6 +24,7 @@ const OutputWindow = ({ outputDetails }) => {
         }
     }
 
+    // Test
     return (
         <>
             <OutputTitle>Output</OutputTitle>
