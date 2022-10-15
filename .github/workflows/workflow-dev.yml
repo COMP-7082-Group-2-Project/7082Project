@@ -1,0 +1,35 @@
+name: Netlify Deploy (Dev)
+
+on:
+  push:
+    branches:
+      - "dev"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Create .env file
+        run: |
+          touch .env
+          echo REACT_APP_RAPID_API_HOST=${{ secrets.REACT_APP_RAPID_API_HOST }} >> .env
+          echo REACT_APP_RAPID_API_KEY=${{ secrets.REACT_APP_RAPID_API_KEY }} >> .env
+      
+      - name: Install and build
+        run: npm install && npm run build
+      
+      - name: Deploy
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_DEV }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_DEV }}
+        with:
+          args: deploy --dir=build --prod
