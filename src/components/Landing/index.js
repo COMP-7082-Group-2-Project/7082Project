@@ -55,7 +55,7 @@ const target = 5;
 console.log(binarySearch(arr, target));`;
 
 const Landing = () => {
-    // States, references
+    // States, references (dev branch)
     const [code, setCode] = useState(javascriptDefault);
     const [customInput, setCustomInput] = useState("");
     const [outputDetails, setOutputDetails] = useState(null);
