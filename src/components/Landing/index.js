@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { defineTheme } from "../../lib/defineTheme";
 import { LanguageOptions } from "../../data/LanguageOptions";
-import 
 
 import CodeEditor from "../CodeEditor";
 import useKeyPress from "../../hooks/useKeyPress";
 import LanguageDropdown from "../LanguageDropdown";
 import ThemeDropdown from "../ThemeDropdown";
+import DifficultyDropdown from "../DifficultyDropdown";
 import OutputWindow from "../OutputWindow";
 import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
@@ -63,6 +63,20 @@ const Landing = () => {
     const [processing, setProcessing] = useState(null);
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
+    const [expectedOutput, setExpectedOutput] = useState("");
+
+    // Compare output of user's code to expected output
+    useEffect(() => {
+        if (!outputDetails) return;
+        if (!expectedOutput) return;
+
+        // Regex to remove only newlines at the start and end of a string
+        const regex = /^\s+|\s+$/g;
+
+        if (atob(outputDetails.stdout).replace(regex, "") === expectedOutput) {
+            console.log("Correct!");
+        }
+    }, [outputDetails, expectedOutput]);
 
     // Key presses
     const enterPress = useKeyPress("Enter");
@@ -82,6 +96,25 @@ const Landing = () => {
                 console.error("Case not handled!", action, data);
                 break;
         }
+    }
+
+    const onDifficultyChange = async (sd) => {
+        console.log("Selected Difficulty...", sd);
+
+        // Fetch challenge problems from API
+        const response = await axios.get("https://alkarimj1997.github.io/data/challenge_problems.json");
+
+        const problems = response.data.problems;
+
+        // Filter by difficulty
+        const filteredProblems = problems.filter(p => p.difficulty.toLowerCase() === sd.value);
+
+        // Select random problem
+        const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
+
+        // Set code to random problem and answer to expected output
+        setCode(randomProblem.body.join("\n"));
+        setExpectedOutput(randomProblem.answer.join("\n"));
     }
 
     const checkStatus = useCallback(async (token) => {
@@ -124,10 +157,12 @@ const Landing = () => {
     const handleCompile = useCallback(async () => {
         setProcessing(true);
 
+        console.log(code);
+
         // Form data to send
         const formData = {
             language_id: language.id,
-            source_code: btoa(code),
+            source_code: btoa(unescape(encodeURIComponent(code))),
             command_line_arguments: customInput,
         }
 
@@ -242,6 +277,9 @@ const Landing = () => {
                             handleThemeChange={handleThemeChange}
                             theme={theme}
                         />
+                    </DropdownWrapper>
+                    <DropdownWrapper>
+                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} />
                     </DropdownWrapper>
                 </DropdownContainer>
 
