@@ -49,7 +49,11 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
                         const cursorPosition = editorRef.current.getPosition();
                         const { lineNumber } = cursorPosition;
 
-                        if (lineNumber <= PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - 3) {
+                        // Get the language for read-only lines (test cases)
+                        const currentLanguage = ChallengeLanguages.find(l => l.name === editor.getModel()._languageId);
+                        const testCasesLine = currentLanguage.readOnly || 3;
+
+                        if (lineNumber <= PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - testCasesLine) {
                             editorRef.current.updateOptions({ readOnly: true });
                         } else {
                             editorRef.current.updateOptions({ readOnly: false });
