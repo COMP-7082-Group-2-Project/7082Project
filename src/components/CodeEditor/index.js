@@ -11,19 +11,43 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
     const PROBLEM_STATEMENT_LENGTH = 12;
     const readOnlyMap = {
         "javascript": 3,
-        "python": 3 ,
-        "java": 6 ,
-        "c": 6 ,
-        "cpp": 6 ,
-        "csharp": 6 ,
-        "ruby": 3 ,
-        "swift": 3 ,
+        "python": 3,
+        "java": 6,
+        "c": 6,
+        "cpp": 6,
+        "csharp": 6,
+        "ruby": 3,
+        "swift": 3,
         "php": 4
     }
 
     const handleEditorChange = (value) => {
         setValue(value);
         onChange("code", value);
+
+        editorRef.current.onDidChangeModelContent((e) => {
+            if (e.isUndoing || editorRef.current.ignoreChange) {
+                return;
+            }
+
+            e.changes.forEach(change => {
+                // If the user is typing in the problem statement, undo the change
+                if (change.range.startLineNumber < PROBLEM_STATEMENT_LENGTH) {
+                    editorRef.current.ignoreChange = true;
+                    editorRef.current.getModel().undo();
+                    editorRef.current.ignoreChange = false;
+                }
+
+                // If the user is editing the test case lines, undo the change
+                const testCaseLines = readOnlyMap[editorRef.current.getModel()._languageId];
+
+                if (change.range.startLineNumber > editorRef.current.getModel().getLineCount() - testCaseLines) {
+                    editorRef.current.ignoreChange = true;
+                    editorRef.current.getModel().undo();
+                    editorRef.current.ignoreChange = false;
+                }
+            })
+        })
     };
 
     // Change code editor value when difficulty changes
@@ -48,7 +72,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
 
                     // Set custom tooltip message
                     const messageContribution = editor.getContribution("editor.contrib.messageController");
-                    
+
                     editor.onDidAttemptReadOnlyEdit(() => {
                         messageContribution.showMessage("You can't edit this area!", editor.getPosition());
                     })
@@ -59,11 +83,10 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
                         const cursorPosition = editorRef.current.getPosition();
                         const { lineNumber } = cursorPosition;
 
-                        // Get the language for read-only lines (test cases)
-                        const currentLanguage = readOnlyMap[editor.getModel()._languageId];
-                        const testCasesLine = currentLanguage.readOnly || 3;
+                        // Get read-only lines (test cases) for the current language
+                        const testCaseLines = readOnlyMap[editor.getModel()._languageId];
 
-                        if (lineNumber <= PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - testCasesLine) {
+                        if (lineNumber < PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - testCaseLines) {
                             editorRef.current.updateOptions({ readOnly: true });
                         } else {
                             editorRef.current.updateOptions({ readOnly: false });
