@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
-import { ChallengeLanguages } from "../../data/ChallengeLanguages";
 
 const CodeEditor = ({ onChange, language, code, theme }) => {
     // States, references
@@ -10,6 +9,17 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
 
     // Constants
     const PROBLEM_STATEMENT_LENGTH = 12;
+    const readOnlyMap = {
+        "javascript": 3,
+        "python": 3 ,
+        "java": 6 ,
+        "c": 6 ,
+        "cpp": 6 ,
+        "csharp": 6 ,
+        "ruby": 3 ,
+        "swift": 3 ,
+        "php": 4
+    }
 
     const handleEditorChange = (value) => {
         setValue(value);
@@ -32,7 +42,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
                 theme={theme}
                 defaultValue="// some comment"
                 onChange={handleEditorChange}
-                options={{ wordWrap: "on" }}
+                options={{ wordWrap: "on", dragAndDrop: false }}
                 onMount={(editor) => {
                     editorRef.current = editor;
 
@@ -50,7 +60,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
                         const { lineNumber } = cursorPosition;
 
                         // Get the language for read-only lines (test cases)
-                        const currentLanguage = ChallengeLanguages.find(l => l.name === editor.getModel()._languageId);
+                        const currentLanguage = readOnlyMap[editor.getModel()._languageId];
                         const testCasesLine = currentLanguage.readOnly || 3;
 
                         if (lineNumber <= PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - testCasesLine) {

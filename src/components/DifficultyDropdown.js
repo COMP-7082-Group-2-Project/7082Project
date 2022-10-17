@@ -2,9 +2,11 @@ import React from "react";
 import Select from "react-select";
 import { CustomStyles } from "../styles/CustomStyles";
 import { DifficultyOptions } from "../data/DifficultyOptions";
-import { ChallengeLanguages } from "../data/ChallengeLanguages";
 
 const DifficultyDropdown = ({ onDifficultyChange, language }) => {
+    // Constants
+    const supportedLanguages = ["javascript", "python","java","c", "cpp", "csharp", "ruby", "swift","php"]
+
     return (
         <Select
             placeholder={`Select Difficulty`}
@@ -22,7 +24,7 @@ const DifficultyDropdown = ({ onDifficultyChange, language }) => {
 
                 onDifficultyChange(selectedOption)
             }}
-            isDisabled={!ChallengeLanguages.find(l => l.name === language)}
+            isDisabled={!supportedLanguages.includes(language)}
         />
     )
 }
