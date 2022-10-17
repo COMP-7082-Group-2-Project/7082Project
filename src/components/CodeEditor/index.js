@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
+import { ChallengeLanguages } from "../../data/ChallengeLanguages";
 
-const CodeEditor = ({ onChange, language, code, theme, readOnly }) => {
+const CodeEditor = ({ onChange, language, code, theme }) => {
     // States, references
     const [value, setValue] = useState(code || "");
-    const READ_ONLY = 12;
+    const editorRef = useRef(null);
+
+    // Constants
+    const PROBLEM_STATEMENT_LENGTH = 12;
 
     const handleEditorChange = (value) => {
         setValue(value);
@@ -30,15 +34,25 @@ const CodeEditor = ({ onChange, language, code, theme, readOnly }) => {
                 onChange={handleEditorChange}
                 options={{ wordWrap: "on" }}
                 onMount={(editor) => {
-                    editor.onDidChangeCursorPosition(e => {
-                        // Make problem statement uneditable
-                        if (e.position.lineNumber < READ_ONLY) {
-                            editor.setPosition({ lineNumber: READ_ONLY, column: 1 });
-                        }
+                    editorRef.current = editor;
 
-                        // Make last 3 lines uneditable
-                        if (e.position.lineNumber > editor.getModel().getLineCount() - 3) {
-                            editor.setPosition({ lineNumber: editor.getModel().getLineCount() - 3, column: 1 });
+                    // Set custom tooltip message
+                    const messageContribution = editor.getContribution("editor.contrib.messageController");
+                    
+                    editor.onDidAttemptReadOnlyEdit(() => {
+                        messageContribution.showMessage("You can't edit this area!", editor.getPosition());
+                    })
+
+                    // Don't allow read-write access if user is in an non-editable area
+                    editor.onDidChangeCursorSelection(e => {
+                        // Get the cursor position
+                        const cursorPosition = editorRef.current.getPosition();
+                        const { lineNumber } = cursorPosition;
+
+                        if (lineNumber <= PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - 3) {
+                            editorRef.current.updateOptions({ readOnly: true });
+                        } else {
+                            editorRef.current.updateOptions({ readOnly: false });
                         }
                     })
                 }}

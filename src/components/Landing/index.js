@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { defineTheme } from "../../lib/defineTheme";
 import { LanguageOptions } from "../../data/LanguageOptions";
+import { DifficultyOptions } from "../../data/DifficultyOptions";
 
 import CodeEditor from "../CodeEditor";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -82,7 +83,7 @@ const Landing = () => {
     const enterPress = useKeyPress("Enter");
     const ctrlPress = useKeyPress("Control");
 
-    const onSelectChange = (sl) => {
+    const onSelectChange = async (sl) => {
         console.log("Selected Option...", sl);
         setLanguage(sl);
     }
@@ -105,15 +106,21 @@ const Landing = () => {
         const response = await axios.get("https://alkarimj1997.github.io/data/challenge_problems.json");
 
         const problems = response.data.problems;
+        const start = response.data.start_comment[language.value];
+        const end = response.data.end_comment[language.value];
 
-        // Filter by difficulty
-        const filteredProblems = problems.filter(p => p.difficulty.toLowerCase() === sd.value);
+        // Filter by language and difficulty
+        const filteredProblems = problems.filter(p => {
+            return p.languages.includes(language.value) && p.difficulty.toLowerCase() === sd.value
+        });
 
         // Select random problem
         const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
 
         // Set code to random problem and answer to expected output
-        setCode(randomProblem.body.join("\n"));
+        const { problem_statement, body } = randomProblem;
+
+        setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[language.value].join("\n")}`);
         setExpectedOutput(randomProblem.answer.join("\n"));
     }
 
@@ -279,7 +286,7 @@ const Landing = () => {
                         />
                     </DropdownWrapper>
                     <DropdownWrapper>
-                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} />
+                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} />
                     </DropdownWrapper>
                 </DropdownContainer>
 
