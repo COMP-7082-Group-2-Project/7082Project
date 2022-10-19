@@ -71,6 +71,7 @@ const Landing = () => {
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
     const [expectedOutput, setExpectedOutput] = useState("");
+    const [readOnlyMap, setReadOnlyMap] = useState({});
     const [freeMode, setFreeMode] = useState(true);
 
     // Compare output of user's code to expected output
@@ -127,11 +128,12 @@ const Landing = () => {
         // Select random problem
         const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
 
-        // Set code to random problem and answer to expected output
-        const { problem_statement, body } = randomProblem;
+        // Set code to random problem, answer to expected output, and read only map
+        const { problem_statement, body, readOnlyMap } = randomProblem;
 
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[language.value].join("\n")}`);
         setExpectedOutput(randomProblem.answer.join("\n"));
+        setReadOnlyMap(readOnlyMap);
     }
 
     const checkStatus = useCallback(async (token) => {
@@ -314,6 +316,7 @@ const Landing = () => {
                                     language={language?.value}
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}
+                                    readOnlyMap={readOnlyMap}
                                 />
                             </Tab>
                             <Tab eventKey="manual" title="How To">

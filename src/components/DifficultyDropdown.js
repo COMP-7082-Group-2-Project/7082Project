@@ -5,7 +5,7 @@ import { DifficultyOptions } from "../data/DifficultyOptions";
 
 const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
     // Constants
-    const supportedLanguages = ["javascript", "python","java","c", "cpp", "csharp", "ruby", "swift","php"]
+    const supportedLanguages = ["javascript", "python","java","c", "cpp", "csharp", "go", "ruby", "swift","php"]
 
     // Enable all difficulty options if free mode is selected
     useEffect(() => {

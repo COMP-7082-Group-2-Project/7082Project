@@ -3,24 +3,24 @@ import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
 import { javascriptDefault } from "../../lib/initialCode";
 
-const CodeEditor = ({ onChange, language, code, theme, mode }) => {
+const CodeEditor = ({ onChange, language, code, theme, mode, readOnlyMap }) => {
     // States, references
     const [value, setValue] = useState(code || "");
     const editorRef = useRef(null);
 
     // Constants
     const PROBLEM_STATEMENT_LENGTH = 12;
-    const readOnlyMap = {
-        "javascript": 3,
-        "python": 3,
-        "java": 6,
-        "c": 6,
-        "cpp": 6,
-        "csharp": 6,
-        "ruby": 3,
-        "swift": 3,
-        "php": 4
-    }
+    // const readOnlyMap = {
+    //     "javascript": 3,
+    //     "python": 3,
+    //     "java": 6,
+    //     "c": 6,
+    //     "cpp": 6,
+    //     "csharp": 6,
+    //     "ruby": 3,
+    //     "swift": 3,
+    //     "php": 4
+    // }
 
     const handleEditorChange = (value) => {
         setValue(value);
@@ -43,6 +43,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
 
                 // If the user is editing the test case lines, undo the change
                 const testCaseLines = readOnlyMap[editorRef.current.getModel()._languageId];
+                console.log(testCaseLines);
 
                 if (change.range.startLineNumber > editorRef.current.getModel().getLineCount() - testCaseLines) {
                     editorRef.current.ignoreChange = true;
@@ -61,7 +62,28 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
 
     return (
         <CodeContainer>
-            <Editor
+            {mode === "free" ? (
+                <Editor
+                    height="85vh"
+                    width={`100%`}
+                    language={language || "javascript"}
+                    value={value}
+                    theme={theme}
+                    defaultValue={javascriptDefault}
+                    onChange={handleEditorChange}
+                    options={{ wordWrap: "on" }}
+                    beforeMount={(monaco) => {
+                        // Destroys old editor instance for free mode
+                        monaco.editor.getModels().forEach(model => model.dispose());
+                    }}
+                    onMount={(editor) => {
+                        editorRef.current = editor;
+
+                        // Set the editor to javascript default code
+                        editor.setValue(javascriptDefault);
+                    }}
+                />
+            ) : Object.keys(readOnlyMap).length !== 0 ? (<Editor
                 key={`code-editor-mode-${mode}`}
                 height="85vh"
                 width={`100%`}
@@ -70,18 +92,12 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                 theme={theme}
                 defaultValue="// some comment"
                 onChange={handleEditorChange}
-                options={{ wordWrap: "on", dragAndDrop: false }}
+                options={{ wordWrap: "on" }}
                 beforeMount={(monaco) => {
                     // Destroys old editor instance for free mode
                     monaco.editor.getModels().forEach(model => model.dispose());
                 }}
                 onMount={(editor) => {
-                    // If editor is in free mode, clear the editor and return
-                    if (mode === "free") {
-                        editor.setValue(javascriptDefault);
-                        return;
-                    }
-
                     editorRef.current = editor;
 
                     // Set custom tooltip message
@@ -107,8 +123,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                         }
                     })
                 }}
-                
-            />
+            />) : null}
         </CodeContainer>
     )
 }
