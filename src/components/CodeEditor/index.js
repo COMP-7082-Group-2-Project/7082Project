@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
+import { javascriptDefault } from "../../lib/initialCode";
 
-const CodeEditor = ({ onChange, language, code, theme }) => {
+const CodeEditor = ({ onChange, language, code, theme, mode }) => {
     // States, references
     const [value, setValue] = useState(code || "");
     const editorRef = useRef(null);
@@ -24,6 +25,8 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
     const handleEditorChange = (value) => {
         setValue(value);
         onChange("code", value);
+
+        if (mode === "free") return;
 
         editorRef.current.onDidChangeModelContent((e) => {
             if (e.isUndoing || editorRef.current.ignoreChange) {
@@ -59,6 +62,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
     return (
         <CodeContainer>
             <Editor
+                key={`code-editor-mode-${mode}`}
                 height="85vh"
                 width={`100%`}
                 language={language || "javascript"}
@@ -67,7 +71,17 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
                 defaultValue="// some comment"
                 onChange={handleEditorChange}
                 options={{ wordWrap: "on", dragAndDrop: false }}
+                beforeMount={(monaco) => {
+                    // Destroys old editor instance for free mode
+                    monaco.editor.getModels().forEach(model => model.dispose());
+                }}
                 onMount={(editor) => {
+                    // If editor is in free mode, clear the editor and return
+                    if (mode === "free") {
+                        editor.setValue(javascriptDefault);
+                        return;
+                    }
+
                     editorRef.current = editor;
 
                     // Set custom tooltip message
@@ -93,6 +107,7 @@ const CodeEditor = ({ onChange, language, code, theme }) => {
                         }
                     })
                 }}
+                
             />
         </CodeContainer>
     )

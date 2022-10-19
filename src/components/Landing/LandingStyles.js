@@ -8,6 +8,7 @@ export const LandingNav = styled.div`
 
 export const DropdownContainer = styled.div`
     display: flex;
+    max-width: 1750px;
 `
 
 export const DropdownWrapper = styled.div`
@@ -30,6 +31,7 @@ export const CodeWrapper = styled.div`
 
 export const OutputContainer = styled.div`
     width: 30%;
+    margin-top: 3.5rem;
 `
 
 export const InputWrapper = styled.div`
@@ -55,3 +57,12 @@ export const ExecuteButton = styled.button`
                     0px 1px 2px 0px rgba(0, 0, 0, 0.06);
     }
 `
+
+export const FreeCodeWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin: 0.75rem 2rem 0 auto;
+    font-size: 1.2rem;
+`;

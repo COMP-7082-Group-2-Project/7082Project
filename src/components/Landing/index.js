@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { defineTheme } from "../../lib/defineTheme";
 import { LanguageOptions } from "../../data/LanguageOptions";
-import { DifficultyOptions } from "../../data/DifficultyOptions";
+import { javascriptDefault } from "../../lib/initialCode";
 
 import CodeEditor from "../CodeEditor";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -15,7 +15,8 @@ import OutputDetails from "../OutputDetails";
 import {
     LandingNav, LandingContainer, DropdownContainer,
     DropdownWrapper, MainContainer, CodeWrapper,
-    OutputContainer, InputWrapper, ExecuteButton
+    OutputContainer, InputWrapper, ExecuteButton,
+    FreeCodeWrapper
 } from "./LandingStyles";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -23,7 +24,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
 
-const javascriptDefault = `/**
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import InfoSection from "../InfoSection";
+import Form from "react-bootstrap/Form";
+
+const oldDefault = `/**
 * Problem: Binary Search: Search a sorted array for a target value.
 */
 
@@ -65,6 +71,7 @@ const Landing = () => {
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
     const [expectedOutput, setExpectedOutput] = useState("");
+    const [freeMode, setFreeMode] = useState(true);
 
     // Compare output of user's code to expected output
     useEffect(() => {
@@ -101,6 +108,9 @@ const Landing = () => {
 
     const onDifficultyChange = async (sd) => {
         console.log("Selected Difficulty...", sd);
+
+        // Set free mode to false
+        setFreeMode(false);
 
         // Fetch challenge problems from API
         const response = await axios.get("https://alkarimj1997.github.io/data/challenge_problems.json");
@@ -286,18 +296,30 @@ const Landing = () => {
                         />
                     </DropdownWrapper>
                     <DropdownWrapper>
-                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} />
+                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={freeMode} />
                     </DropdownWrapper>
+
+                    <FreeCodeWrapper>
+                        <Form.Check type="switch" label="Free Code" value={freeMode} onChange={() => setFreeMode(!freeMode)} checked={freeMode}/>
+                    </FreeCodeWrapper>
                 </DropdownContainer>
 
                 <MainContainer>
                     <CodeWrapper>
-                        <CodeEditor
-                            code={code}
-                            onChange={onChange}
-                            language={language?.value}
-                            theme={theme.value}
-                        />
+                        <Tabs defaultActiveKey="editor" className="mb-3" justify>
+                            <Tab eventKey="editor" title="Editor">
+                                <CodeEditor
+                                    code={code}
+                                    onChange={onChange}
+                                    language={language?.value}
+                                    theme={theme.value}
+                                    mode={freeMode ? "free" : "challenge"}
+                                />
+                            </Tab>
+                            <Tab eventKey="manual" title="How To">
+                                <InfoSection />
+                            </Tab>
+                        </Tabs>
                     </CodeWrapper>
 
                     <OutputContainer>

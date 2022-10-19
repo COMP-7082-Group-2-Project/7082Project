@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import { CustomStyles } from "../styles/CustomStyles";
 import { DifficultyOptions } from "../data/DifficultyOptions";
 
-const DifficultyDropdown = ({ onDifficultyChange, language }) => {
+const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
     // Constants
     const supportedLanguages = ["javascript", "python","java","c", "cpp", "csharp", "ruby", "swift","php"]
+
+    // Enable all difficulty options if free mode is selected
+    useEffect(() => {
+        if (freeMode) {
+            DifficultyOptions.forEach(option => {
+                option.isDisabled = false;
+            })
+        }
+    }, [freeMode])
 
     return (
         <Select
