@@ -109,7 +109,7 @@ const Landing = () => {
     const onDifficultyChange = async (sd) => {
         console.log("Selected Difficulty...", sd);
 
-        // Set free mode to false
+        // Set free mode to false and enable checkbox
         setFreeMode(false);
 
         // Fetch challenge problems from API
@@ -296,11 +296,11 @@ const Landing = () => {
                         />
                     </DropdownWrapper>
                     <DropdownWrapper>
-                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={freeMode} />
+                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={() => freeMode ? true : false } />
                     </DropdownWrapper>
 
                     <FreeCodeWrapper>
-                        <Form.Check type="switch" label="Free Code" value={freeMode} onChange={() => setFreeMode(!freeMode)} checked={freeMode}/>
+                        <Form.Check type="switch" label="Free Code" value={freeMode} onChange={() => !freeMode && setFreeMode(!freeMode) } checked={freeMode} disabled={freeMode} />
                     </FreeCodeWrapper>
                 </DropdownContainer>
 
