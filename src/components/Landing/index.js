@@ -336,7 +336,7 @@ const Landing = () => {
                         <Tabs defaultActiveKey="editor" className="mb-3" justify>
                             <Tab eventKey="editor" title="Editor">
                                 <CodeEditor
-                                    key={`editor-${difficulty}-${language.value}`}
+                                    key={`editor-${difficulty}-${language.value}-${freeMode}`}
                                     code={code}
                                     onChange={onChange}
                                     language={language?.value}
