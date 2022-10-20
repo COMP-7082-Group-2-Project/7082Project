@@ -122,17 +122,16 @@ const Landing = () => {
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[sl.value].join("\n")}`);
     }
 
-    // const onChange = (action, data) => {
-    //     console.log(action, data);
-    //     switch (action) {
-    //         case "code":
-    //             setCode(data);
-    //             break;
-    //         default:
-    //             console.error("Case not handled!", action, data);
-    //             break;
-    //     }
-    // }
+    const onChange = (action, data) => {
+        switch (action) {
+            case "code":
+                setCode(data);
+                break;
+            default:
+                console.error("Case not handled!", action, data);
+                break;
+        }
+    }
 
     const onDifficultyChange = (sd) => {
         console.log("Selected Difficulty...", sd);
@@ -144,14 +143,10 @@ const Landing = () => {
         const start = startComments[language.value];
         const end = endComments[language.value];
 
-        console.log(challengeProblems);
-
         // Filter by language and difficulty (without mutating original array)
         const filteredProblems = challengeProblems.filter(p => {
             return p.languages.includes(language.value) && p.difficulty.toLowerCase() === sd.value
         });
-
-        console.log(filteredProblems);
 
         // Select random problem
         const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
@@ -341,9 +336,9 @@ const Landing = () => {
                         <Tabs defaultActiveKey="editor" className="mb-3" justify>
                             <Tab eventKey="editor" title="Editor">
                                 <CodeEditor
-                                    key={`editor-${difficulty}`}
+                                    key={`editor-${difficulty}-${language.value}`}
                                     code={code}
-                                    onChange={setCode}
+                                    onChange={onChange}
                                     language={language?.value}
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}

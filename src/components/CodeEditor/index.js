@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
 import { javascriptDefault } from "../../lib/initialCode";
@@ -13,7 +13,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
 
     const handleEditorChange = (value) => {
         setValue(value);
-        onChange(value);
+        onChange("code", value);
 
         if (mode === "free") return;
 
@@ -32,13 +32,6 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
             })
         })
     };
-
-    // useEffect(() => {
-    //     if (value === code) return;
-
-    //     setValue(code);
-    //     onChange(code);
-    // }, [code, onChange, value]);
 
     return (
         <CodeContainer>
@@ -98,11 +91,6 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                             editorRef.current.updateOptions({ readOnly: false });
                         }
                     })
-
-                    // Change the code editor value when language changes
-                    // editor.onDidChangeModelLanguage(() => {
-                    //     editor.setValue(code);
-                    // })
                 }}
             />)}
         </CodeContainer>
