@@ -5,7 +5,7 @@ import { javascriptDefault } from "../../lib/initialCode";
 
 const CodeEditor = ({ onChange, language, code, theme, mode }) => {
     // States, references
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(code || "");
     const editorRef = useRef(null);
 
     // Constants
@@ -13,7 +13,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
 
     const handleEditorChange = (value) => {
         setValue(value);
-        onChange("code", value);
+        onChange(value);
 
         if (mode === "free") return;
 
@@ -33,10 +33,12 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
         })
     };
 
-    // Update the code editor when the difficulty changes
-    useEffect(() => {
-        setValue(code);
-    }, [code]);
+    // useEffect(() => {
+    //     if (value === code) return;
+
+    //     setValue(code);
+    //     onChange(code);
+    // }, [code, onChange, value]);
 
     return (
         <CodeContainer>
@@ -62,7 +64,6 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     }}
                 />
             ) : (<Editor
-                key={`code-editor-${code}`}
                 height="85vh"
                 width={`100%`}
                 language={language || "javascript"}
@@ -99,9 +100,9 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     })
 
                     // Change the code editor value when language changes
-                    editor.onDidChangeModelLanguage(() => {
-                        editor.setValue(code);
-                    })
+                    // editor.onDidChangeModelLanguage(() => {
+                    //     editor.setValue(code);
+                    // })
                 }}
             />)}
         </CodeContainer>

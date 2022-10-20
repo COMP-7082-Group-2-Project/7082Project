@@ -70,13 +70,13 @@ const Landing = () => {
     const [processing, setProcessing] = useState(null);
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
-    const [difficulty, setDifficulty] = useState(null);
     const [expectedOutput, setExpectedOutput] = useState("");
     const [freeMode, setFreeMode] = useState(true);
     const [challengeProblems, setChallengeProblems] = useState([]);
     const [startComments, setStartComments] = useState({});
     const [endComments, setEndComments] = useState({});
     const [currentProblem, setCurrentProblem] = useState(null);
+    const [difficulty, setDifficulty] = useState(null);
 
     // Get challenge problems from backend on page load
     useEffect(() => {
@@ -122,21 +122,21 @@ const Landing = () => {
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[sl.value].join("\n")}`);
     }
 
-    const onChange = (action, data) => {
-        console.log(action, data);
-        switch (action) {
-            case "code":
-                setCode(data);
-                break;
-            default:
-                console.error("Case not handled!", action, data);
-                break;
-        }
-    }
+    // const onChange = (action, data) => {
+    //     console.log(action, data);
+    //     switch (action) {
+    //         case "code":
+    //             setCode(data);
+    //             break;
+    //         default:
+    //             console.error("Case not handled!", action, data);
+    //             break;
+    //     }
+    // }
 
     const onDifficultyChange = (sd) => {
         console.log("Selected Difficulty...", sd);
-        setDifficulty(sd);
+        setDifficulty(sd.value);
 
         // Set free mode to false and enable checkbox
         setFreeMode(false);
@@ -343,7 +343,7 @@ const Landing = () => {
                                 <CodeEditor
                                     key={`editor-${difficulty}`}
                                     code={code}
-                                    onChange={onChange}
+                                    onChange={setCode}
                                     language={language?.value}
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}
