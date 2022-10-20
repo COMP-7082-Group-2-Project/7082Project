@@ -323,7 +323,7 @@ const Landing = () => {
                         />
                     </DropdownWrapper>
                     <DropdownWrapper>
-                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={() => freeMode ? true : false} />
+                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={freeMode} />
                     </DropdownWrapper>
 
                     <FreeCodeWrapper>

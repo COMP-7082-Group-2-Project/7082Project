@@ -1,15 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { CustomStyles } from "../styles/CustomStyles";
 import { DifficultyOptions } from "../data/DifficultyOptions";
 
 const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
+    // States, references
+    const [selectedOption, setSelectedOption] = useState(null);
+
     // Constants
     const supportedLanguages = ["javascript", "python","java","c", "cpp", "csharp", "go", "ruby", "swift","php"]
+
+    const handleChange = (e) => {
+        setSelectedOption(e);
+        onDifficultyChange(e);
+    }
 
     // Enable all difficulty options if free mode is selected
     useEffect(() => {
         if (freeMode) {
+            setSelectedOption(null);
+
             DifficultyOptions.forEach(option => {
                 option.isDisabled = false;
             })
@@ -19,21 +29,13 @@ const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
     return (
         <Select
             placeholder={`Select Difficulty`}
+            value={selectedOption}
             options={DifficultyOptions}
             styles={CustomStyles}
             defaultValue={DifficultyOptions[0]}
-            onChange={(selectedOption) => {
-                // Enable all options that are disabled
-                DifficultyOptions.forEach((option) => {
-                    option.isDisabled = false;
-                });
-
-                // Disable the selected option
-                selectedOption.isDisabled = true;
-
-                onDifficultyChange(selectedOption)
-            }}
+            onChange={handleChange}
             isDisabled={!supportedLanguages.includes(language)}
+            isOptionDisabled={(option) => option === selectedOption}
         />
     )
 }
