@@ -3,24 +3,13 @@ import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
 import { javascriptDefault } from "../../lib/initialCode";
 
-const CodeEditor = ({ onChange, language, code, theme, mode, readOnlyMap }) => {
+const CodeEditor = ({ onChange, language, code, theme, mode }) => {
     // States, references
     const [value, setValue] = useState(code || "");
     const editorRef = useRef(null);
 
     // Constants
-    const PROBLEM_STATEMENT_LENGTH = 12;
-    // const readOnlyMap = {
-    //     "javascript": 3,
-    //     "python": 3,
-    //     "java": 6,
-    //     "c": 6,
-    //     "cpp": 6,
-    //     "csharp": 6,
-    //     "ruby": 3,
-    //     "swift": 3,
-    //     "php": 4
-    // }
+    const PROBLEM_STATEMENT_LENGTH = 18;
 
     const handleEditorChange = (value) => {
         setValue(value);
@@ -36,16 +25,6 @@ const CodeEditor = ({ onChange, language, code, theme, mode, readOnlyMap }) => {
             e.changes.forEach(change => {
                 // If the user is typing in the problem statement, undo the change
                 if (change.range.startLineNumber < PROBLEM_STATEMENT_LENGTH) {
-                    editorRef.current.ignoreChange = true;
-                    editorRef.current.getModel().undo();
-                    editorRef.current.ignoreChange = false;
-                }
-
-                // If the user is editing the test case lines, undo the change
-                const testCaseLines = readOnlyMap[editorRef.current.getModel()._languageId];
-                console.log(testCaseLines);
-
-                if (change.range.startLineNumber > editorRef.current.getModel().getLineCount() - testCaseLines) {
                     editorRef.current.ignoreChange = true;
                     editorRef.current.getModel().undo();
                     editorRef.current.ignoreChange = false;
@@ -83,7 +62,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode, readOnlyMap }) => {
                         editor.setValue(javascriptDefault);
                     }}
                 />
-            ) : Object.keys(readOnlyMap).length !== 0 ? (<Editor
+            ) : (<Editor
                 key={`code-editor-mode-${mode}`}
                 height="85vh"
                 width={`100%`}
@@ -104,26 +83,28 @@ const CodeEditor = ({ onChange, language, code, theme, mode, readOnlyMap }) => {
                     const messageContribution = editor.getContribution("editor.contrib.messageController");
 
                     editor.onDidAttemptReadOnlyEdit(() => {
-                        messageContribution.showMessage("You can't edit this area!", editor.getPosition());
+                        messageContribution.showMessage("You can't edit the problem statement!", editor.getPosition());
                     })
 
                     // Don't allow read-write access if user is in an non-editable area
-                    editor.onDidChangeCursorSelection(e => {
+                    editor.onDidChangeCursorSelection(() => {
                         // Get the cursor position
                         const cursorPosition = editorRef.current.getPosition();
                         const { lineNumber } = cursorPosition;
 
-                        // Get read-only lines (test cases) for the current language
-                        const testCaseLines = readOnlyMap[editor.getModel()._languageId];
-
-                        if (lineNumber < PROBLEM_STATEMENT_LENGTH || lineNumber > editor.getModel().getLineCount() - testCaseLines) {
+                        if (lineNumber < PROBLEM_STATEMENT_LENGTH) {
                             editorRef.current.updateOptions({ readOnly: true });
                         } else {
                             editorRef.current.updateOptions({ readOnly: false });
                         }
                     })
+
+                    // Change the code editor value when language changes
+                    editor.onDidChangeModelLanguage(() => {
+                        editor.setValue(code);
+                    })
                 }}
-            />) : null}
+            />)}
         </CodeContainer>
     )
 }

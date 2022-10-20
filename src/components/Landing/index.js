@@ -71,8 +71,22 @@ const Landing = () => {
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
     const [expectedOutput, setExpectedOutput] = useState("");
-    const [readOnlyMap, setReadOnlyMap] = useState({});
     const [freeMode, setFreeMode] = useState(true);
+    const [challengeProblems, setChallengeProblems] = useState([]);
+    const [startComments, setStartComments] = useState({});
+    const [endComments, setEndComments] = useState({});
+    const [currentProblem, setCurrentProblem] = useState(null);
+
+    // Get challenge problems from backend on page load
+    useEffect(() => {
+        axios.get("https://alkarimj1997.github.io/data/challenge_problems.json").then((res) => {
+            setChallengeProblems(res.data.problems);
+            setStartComments(res.data.start_comment);
+            setEndComments(res.data.end_comment);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }, [])
 
     // Compare output of user's code to expected output
     useEffect(() => {
@@ -94,6 +108,17 @@ const Landing = () => {
     const onSelectChange = async (sl) => {
         console.log("Selected Option...", sl);
         setLanguage(sl);
+
+        // If user is not in challenge mode, do nothing
+        if (freeMode) return;
+
+        const start = startComments[sl.value];
+        const end = endComments[sl.value];
+
+        // Change code to provided code for new language
+        const { problem_statement, body } = currentProblem;
+
+        setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[sl.value].join("\n")}`);
     }
 
     const onChange = (action, data) => {
@@ -107,33 +132,31 @@ const Landing = () => {
         }
     }
 
-    const onDifficultyChange = async (sd) => {
+    const onDifficultyChange = (sd) => {
         console.log("Selected Difficulty...", sd);
 
         // Set free mode to false and enable checkbox
         setFreeMode(false);
 
-        // Fetch challenge problems from API
-        const response = await axios.get("https://alkarimj1997.github.io/data/challenge_problems.json");
-
-        const problems = response.data.problems;
-        const start = response.data.start_comment[language.value];
-        const end = response.data.end_comment[language.value];
+        const start = startComments[language.value];
+        const end = endComments[language.value];
 
         // Filter by language and difficulty
-        const filteredProblems = problems.filter(p => {
+        const filteredProblems = challengeProblems.filter(p => {
             return p.languages.includes(language.value) && p.difficulty.toLowerCase() === sd.value
         });
 
         // Select random problem
         const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
 
-        // Set code to random problem, answer to expected output, and read only map
-        const { problem_statement, body, readOnlyMap } = randomProblem;
+        // Set current problem
+        setCurrentProblem(randomProblem);
+
+        // Set code to random problem, and answer to expected output
+        const { problem_statement, body } = randomProblem;
 
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[language.value].join("\n")}`);
         setExpectedOutput(randomProblem.answer.join("\n"));
-        setReadOnlyMap(readOnlyMap);
     }
 
     const checkStatus = useCallback(async (token) => {
@@ -298,11 +321,11 @@ const Landing = () => {
                         />
                     </DropdownWrapper>
                     <DropdownWrapper>
-                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={() => freeMode ? true : false } />
+                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={() => freeMode ? true : false} />
                     </DropdownWrapper>
 
                     <FreeCodeWrapper>
-                        <Form.Check type="switch" label="Free Code" value={freeMode} onChange={() => !freeMode && setFreeMode(!freeMode) } checked={freeMode} disabled={freeMode} />
+                        <Form.Check type="switch" label="Free Code" value={freeMode} onChange={() => !freeMode && setFreeMode(!freeMode)} checked={freeMode} disabled={freeMode} />
                     </FreeCodeWrapper>
                 </DropdownContainer>
 
@@ -316,7 +339,6 @@ const Landing = () => {
                                     language={language?.value}
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}
-                                    readOnlyMap={readOnlyMap}
                                 />
                             </Tab>
                             <Tab eventKey="manual" title="How To">
