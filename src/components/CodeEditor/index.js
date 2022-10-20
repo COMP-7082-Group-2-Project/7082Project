@@ -5,7 +5,7 @@ import { javascriptDefault } from "../../lib/initialCode";
 
 const CodeEditor = ({ onChange, language, code, theme, mode }) => {
     // States, references
-    const [value, setValue] = useState(code || "");
+    const [value, setValue] = useState("");
     const editorRef = useRef(null);
 
     // Constants
@@ -33,11 +33,10 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
         })
     };
 
-    // Change code editor value when difficulty changes
+    // Update the code editor when the difficulty changes
     useEffect(() => {
         setValue(code);
-        onChange("code", code);
-    }, [code, onChange]);
+    }, [code]);
 
     return (
         <CodeContainer>
@@ -63,7 +62,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     }}
                 />
             ) : (<Editor
-                key={`code-editor-mode-${mode}`}
+                key={`code-editor-${code}`}
                 height="85vh"
                 width={`100%`}
                 language={language || "javascript"}

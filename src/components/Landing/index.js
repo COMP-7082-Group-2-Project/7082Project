@@ -70,6 +70,7 @@ const Landing = () => {
     const [processing, setProcessing] = useState(null);
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
+    const [difficulty, setDifficulty] = useState(null);
     const [expectedOutput, setExpectedOutput] = useState("");
     const [freeMode, setFreeMode] = useState(true);
     const [challengeProblems, setChallengeProblems] = useState([]);
@@ -122,6 +123,7 @@ const Landing = () => {
     }
 
     const onChange = (action, data) => {
+        console.log(action, data);
         switch (action) {
             case "code":
                 setCode(data);
@@ -134,6 +136,7 @@ const Landing = () => {
 
     const onDifficultyChange = (sd) => {
         console.log("Selected Difficulty...", sd);
+        setDifficulty(sd);
 
         // Set free mode to false and enable checkbox
         setFreeMode(false);
@@ -141,10 +144,14 @@ const Landing = () => {
         const start = startComments[language.value];
         const end = endComments[language.value];
 
-        // Filter by language and difficulty
+        console.log(challengeProblems);
+
+        // Filter by language and difficulty (without mutating original array)
         const filteredProblems = challengeProblems.filter(p => {
             return p.languages.includes(language.value) && p.difficulty.toLowerCase() === sd.value
         });
+
+        console.log(filteredProblems);
 
         // Select random problem
         const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
@@ -334,6 +341,7 @@ const Landing = () => {
                         <Tabs defaultActiveKey="editor" className="mb-3" justify>
                             <Tab eventKey="editor" title="Editor">
                                 <CodeEditor
+                                    key={`editor-${difficulty}`}
                                     code={code}
                                     onChange={onChange}
                                     language={language?.value}
