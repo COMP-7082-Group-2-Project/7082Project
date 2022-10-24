@@ -9,6 +9,8 @@ export const InfoContainer = styled.div`
     background-color: #232323;
     color: #fff;
     border-radius: 5px;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
 `;
 
 export const InfoWrapper = styled.div`
