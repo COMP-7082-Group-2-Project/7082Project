@@ -91,4 +91,5 @@ export const HintButton = styled(HiOutlineLightBulb)`
     color: #ffeb3b;
     cursor: ${({ disabled }) => !disabled && "pointer"};
     opacity: ${({ disabled }) => disabled && "0.5"};
+    user-select: none;
 `;

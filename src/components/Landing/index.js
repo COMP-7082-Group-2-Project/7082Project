@@ -11,6 +11,7 @@ import DifficultyDropdown from "../DifficultyDropdown";
 import OutputWindow from "../OutputWindow";
 import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
+import HintModal from "../HintModal";
 
 import {
     LandingNav, LandingContainer, DropdownContainer,
@@ -45,6 +46,8 @@ const Landing = () => {
     const [endComments, setEndComments] = useState({});
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
+
+    const [showHint, setShowHint] = useState(false);
 
     // Get challenge problems from backend on page load
     useEffect(() => {
@@ -270,6 +273,13 @@ const Landing = () => {
         });
     }
 
+    // Modal
+    const showHintModal = () => {
+        if (freeMode) return;
+
+        setShowHint(true);
+    }
+
     return (
         <>
             <ToastContainer
@@ -283,6 +293,13 @@ const Landing = () => {
                 draggable
                 pauseOnHover
             />
+
+            {/* Hint Modal */}
+            <HintModal
+                showHint={showHint}
+                setShowHint={setShowHint}
+                currentProblem={currentProblem} />
+
             <LandingNav></LandingNav>
             <LandingContainer>
                 <DropdownContainer>
@@ -343,7 +360,7 @@ const Landing = () => {
                                 <SkipButton
                                     disabled={freeMode}
                                     onClick={() => randomizeProblem(startComments[language.value], endComments[language.value], difficulty)} />
-                                <HintButton disabled={freeMode} />
+                                <HintButton disabled={freeMode} onClick={showHintModal} />
                                 <ExecuteButton onClick={handleCompile} disabled={!code}>
                                     {processing ? "Processing..." : "Compile and Execute"}
                                 </ExecuteButton>
