@@ -5,7 +5,7 @@ import { FaRegWindowClose } from "react-icons/fa";
 export const SolutionModal = styled(Modal)`
     & > * {
         width: 70vw !important;
-        max-width: 900px !important;
+        max-width: 1000px !important;
     }
 `;
 

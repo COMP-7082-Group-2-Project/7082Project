@@ -13,7 +13,7 @@ const HintModal = ({ showHint, setShowHint, currentProblem }) => {
                         <SolutionModal.Title>{currentProblem.title}</SolutionModal.Title>
                     </SolutionModal.Header>
                     <SolutionModal.Body>
-                        <Accordion id={currentProblem.id} solutions={currentProblem.solutions} />
+                        <Accordion id={currentProblem.id} explanations={currentProblem.explanations} />
                     </SolutionModal.Body>
                     <SolutionModal.Footer>
                         <CloseIcon onClick={() => setShowHint(false)} />

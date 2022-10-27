@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import {
     AccordionSection, AccordionContainer, SolutionHeading,
@@ -7,10 +7,9 @@ import {
 } from "./AccordionStyles";
 import { IconContext } from "react-icons";
 
-const Accordion = ({ id, solutions }) => {
+const Accordion = ({ id, explanations }) => {
     // States, references
     const [clicked, setClicked] = useState(null);
-    const [challengeSolution, setChallengeSolution] = useState(null);
 
     // Constants
     const headings = ["JavaScript", "Python"]
@@ -18,7 +17,7 @@ const Accordion = ({ id, solutions }) => {
     // Method to reveal the content
     const toggle = idx => setClicked(clicked === idx ? null : idx);
 
-    console.log(solutions);
+    console.log(explanations);
 
     return (
         <>
@@ -52,10 +51,10 @@ const Accordion = ({ id, solutions }) => {
                                             </Body>
 
                                             <ExplanationList>
-                                                {solutions[heading.toLowerCase()].map((solution, idx) => {
+                                                {explanations[heading.toLowerCase()].map((point, idx) => {
                                                     return (
                                                         <li key={idx}>
-                                                            {solution}
+                                                            {point}
                                                         </li>
                                                     )
                                                 })}
