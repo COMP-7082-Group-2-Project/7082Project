@@ -1,17 +1,17 @@
 import styled from "styled-components";
 
 export const OutputError = styled.pre`
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem;
     color: #ef4444;
-    font-size: 0.75rem;
+    font-size: 1rem;
     line-height: 1rem;
     font-weight: 400;
 `
 
 export const OutputSuccess = styled.pre`
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem;
     color: #10B981;
-    font-size: 0.75rem;
+    font-size: 1rem;
     line-height: 1rem;
     font-weight: 400;
 `
@@ -39,7 +39,11 @@ export const OutputScreen = styled.div`
     width: 100%;
     font-weight: 400;
     line-height: 1.25rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: #fff;
     overflow-y: auto;
+
+    * {
+        font-family: "Share Tech Mono", monospace;
+    }
 `

@@ -11,7 +11,7 @@ import DifficultyDropdown from "../DifficultyDropdown";
 import OutputWindow from "../OutputWindow";
 import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
-import HintModal from "../HintModal";
+import SolutionModal from "../SolutionModal";
 
 import {
     LandingNav, LandingContainer, DropdownContainer,
@@ -294,8 +294,8 @@ const Landing = () => {
                 pauseOnHover
             />
 
-            {/* Hint Modal */}
-            <HintModal
+            {/* Solution Modal */}
+            <SolutionModal
                 showHint={showHint}
                 setShowHint={setShowHint}
                 currentProblem={currentProblem} />

@@ -44,7 +44,11 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     theme={theme}
                     defaultValue={javascriptDefault}
                     onChange={handleEditorChange}
-                    options={{ wordWrap: "on", fontSize: 13}}
+                    options={{
+                        wordWrap: "on",
+                        fontFamily: "Source Code Pro",
+                        fontSize: 16
+                    }}
                     beforeMount={(monaco) => {
                         // Destroys old editor instance for free mode
                         monaco.editor.getModels().forEach(model => model.dispose());
@@ -64,7 +68,11 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                 theme={theme}
                 defaultValue="// some comment"
                 onChange={handleEditorChange}
-                options={{ wordWrap: "on", fontSize: 13 }}
+                options={{
+                    wordWrap: "on",
+                    fontFamily: "Source Code Pro",
+                    fontSize: 16
+                }}
                 beforeMount={(monaco) => {
                     // Destroys old editor instance for free mode
                     monaco.editor.getModels().forEach(model => model.dispose());
