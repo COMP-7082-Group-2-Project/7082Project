@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { FaCode } from "react-icons/fa";
 
 export const AccordionSection = styled.div`
     display: flex;
