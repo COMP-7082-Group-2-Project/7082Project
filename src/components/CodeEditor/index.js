@@ -37,14 +37,18 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
         <CodeContainer>
             {mode === "free" ? (
                 <Editor
-                    height="85vh"
+                    height="75vh"
                     width={`100%`}
                     language={language || "javascript"}
                     value={value}
                     theme={theme}
                     defaultValue={javascriptDefault}
                     onChange={handleEditorChange}
-                    options={{ wordWrap: "on" }}
+                    options={{
+                        wordWrap: "on",
+                        fontFamily: "Source Code Pro",
+                        fontSize: 16
+                    }}
                     beforeMount={(monaco) => {
                         // Destroys old editor instance for free mode
                         monaco.editor.getModels().forEach(model => model.dispose());
@@ -57,14 +61,18 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     }}
                 />
             ) : (<Editor
-                height="85vh"
+                height="75vh"
                 width={`100%`}
                 language={language || "javascript"}
                 value={value}
                 theme={theme}
                 defaultValue="// some comment"
                 onChange={handleEditorChange}
-                options={{ wordWrap: "on" }}
+                options={{
+                    wordWrap: "on",
+                    fontFamily: "Source Code Pro",
+                    fontSize: 16
+                }}
                 beforeMount={(monaco) => {
                     // Destroys old editor instance for free mode
                     monaco.editor.getModels().forEach(model => model.dispose());

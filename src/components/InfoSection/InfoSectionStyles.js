@@ -6,10 +6,11 @@ import { MdShuffleOn } from "react-icons/md";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 export const InfoContainer = styled.div`
-    min-height: 80vh;
     background-color: #232323;
     color: #fff;
     border-radius: 5px;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
 `;
 
 export const InfoWrapper = styled.div`

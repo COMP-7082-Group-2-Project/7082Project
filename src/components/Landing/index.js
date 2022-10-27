@@ -11,12 +11,14 @@ import DifficultyDropdown from "../DifficultyDropdown";
 import OutputWindow from "../OutputWindow";
 import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
+import SolutionModal from "../SolutionModal";
 
 import {
     LandingNav, LandingContainer, DropdownContainer,
     DropdownWrapper, MainContainer, CodeWrapper,
     OutputContainer, InputWrapper, ExecuteButton,
-    FreeCodeWrapper
+    FreeCodeWrapper, ButtonWrapper, SkipButton,
+    HintButton
 } from "./LandingStyles";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -44,6 +46,8 @@ const Landing = () => {
     const [endComments, setEndComments] = useState({});
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
+
+    const [showHint, setShowHint] = useState(false);
 
     // Get challenge problems from backend on page load
     useEffect(() => {
@@ -100,19 +104,10 @@ const Landing = () => {
         }
     }
 
-    const onDifficultyChange = (sd) => {
-        console.log("Selected Difficulty...", sd);
-        setDifficulty(sd.value);
-
-        // Set free mode to false and enable checkbox
-        setFreeMode(false);
-
-        const start = startComments[language.value];
-        const end = endComments[language.value];
-
+    const randomizeProblem = (start, end, difficulty) => {
         // Filter by language and difficulty (without mutating original array)
         const filteredProblems = challengeProblems.filter(p => {
-            return p.languages.includes(language.value) && p.difficulty.toLowerCase() === sd.value
+            return p.languages.includes(language.value) && p.difficulty.toLowerCase() === difficulty
         });
 
         // Select random problem
@@ -126,6 +121,20 @@ const Landing = () => {
 
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[language.value].join("\n")}`);
         setExpectedOutput(randomProblem.answer.join("\n"));
+    }
+
+    const onDifficultyChange = (sd) => {
+        console.log("Selected Difficulty...", sd);
+        setDifficulty(sd.value);
+
+        // Set free mode to false and enable checkbox
+        setFreeMode(false);
+
+        const start = startComments[language.value];
+        const end = endComments[language.value];
+
+        // Set random coding challenge problem
+        randomizeProblem(start, end, sd.value);
     }
 
     const checkStatus = useCallback(async (token) => {
@@ -264,6 +273,13 @@ const Landing = () => {
         });
     }
 
+    // Modal
+    const showHintModal = () => {
+        if (freeMode) return;
+
+        setShowHint(true);
+    }
+
     return (
         <>
             <ToastContainer
@@ -277,6 +293,13 @@ const Landing = () => {
                 draggable
                 pauseOnHover
             />
+
+            {/* Solution Modal */}
+            <SolutionModal
+                showHint={showHint}
+                setShowHint={setShowHint}
+                currentProblem={currentProblem} />
+
             <LandingNav></LandingNav>
             <LandingContainer>
                 <DropdownContainer>
@@ -290,11 +313,20 @@ const Landing = () => {
                         />
                     </DropdownWrapper>
                     <DropdownWrapper>
-                        <DifficultyDropdown onDifficultyChange={onDifficultyChange} language={language?.value} freeMode={freeMode} />
+                        <DifficultyDropdown
+                            onDifficultyChange={onDifficultyChange}
+                            language={language?.value}
+                            freeMode={freeMode} />
                     </DropdownWrapper>
 
                     <FreeCodeWrapper>
-                        <Form.Check type="switch" label="Free Code" value={freeMode} onChange={() => !freeMode && setFreeMode(!freeMode)} checked={freeMode} disabled={freeMode} />
+                        <Form.Check
+                            type="switch"
+                            label="Free Code"
+                            value={freeMode}
+                            onChange={() => !freeMode && setFreeMode(!freeMode)}
+                            checked={freeMode}
+                            disabled={freeMode} />
                     </FreeCodeWrapper>
                 </DropdownContainer>
 
@@ -303,7 +335,7 @@ const Landing = () => {
                         <Tabs defaultActiveKey="editor" className="mb-3" justify>
                             <Tab eventKey="editor" title="Editor">
                                 <CodeEditor
-                                    key={`editor-${difficulty}-${language.value}-${freeMode}`}
+                                    key={`editor-${difficulty}-${language.value}-${freeMode}-${expectedOutput}`}
                                     code={code}
                                     onChange={onChange}
                                     language={language?.value}
@@ -324,9 +356,15 @@ const Landing = () => {
                                 customInput={customInput}
                                 setCustomInput={setCustomInput}
                             />
-                            <ExecuteButton onClick={handleCompile} disabled={!code}>
-                                {processing ? "Processing..." : "Compile and Execute"}
-                            </ExecuteButton>
+                            <ButtonWrapper>
+                                <SkipButton
+                                    disabled={freeMode}
+                                    onClick={() => randomizeProblem(startComments[language.value], endComments[language.value], difficulty)} />
+                                <HintButton disabled={freeMode} onClick={showHintModal} />
+                                <ExecuteButton onClick={handleCompile} disabled={!code}>
+                                    {processing ? "Processing..." : "Compile and Execute"}
+                                </ExecuteButton>
+                            </ButtonWrapper>
                         </InputWrapper>
                         {outputDetails &&
                             <OutputDetails outputDetails={outputDetails} />}
