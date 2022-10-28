@@ -13,12 +13,14 @@ import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
 import SolutionModal from "../SolutionModal";
 
+import SubmitImage from "../../assets/images/submit.png";
+
 import {
     LandingNav, LandingContainer, DropdownContainer,
     DropdownWrapper, MainContainer, CodeWrapper,
     OutputContainer, InputWrapper, ExecuteButton,
     FreeCodeWrapper, ButtonWrapper, SkipButton,
-    HintButton
+    HintButton, SubmitButton
 } from "./LandingStyles";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -241,6 +243,20 @@ const Landing = () => {
         defineTheme(theme.value).then((_) => setTheme(theme));
     }
 
+    const handleSubmit = async () => {
+        if (!expectedOutput) return;
+        if (!outputDetails) return;
+
+        // Regex to remove only newlines at the start and end of a string
+        const regex = /^\s+|\s+$/g;
+
+        if (atob(outputDetails.stdout).replace(regex, "") === expectedOutput) {
+            console.log("Correct!");
+        } else {
+            console.log("Incorrect!");
+        }
+    }
+
     // Set default theme when page loads
     useEffect(() => {
         defineTheme("oceanic-next").then((_) => {
@@ -364,6 +380,7 @@ const Landing = () => {
                                 <ExecuteButton onClick={handleCompile} disabled={!code}>
                                     {processing ? "Processing..." : "Compile and Execute"}
                                 </ExecuteButton>
+                                <SubmitButton src={SubmitImage} alt="Submit" disabled={freeMode} onClick={handleSubmit} />
                             </ButtonWrapper>
                         </InputWrapper>
                         {outputDetails &&
