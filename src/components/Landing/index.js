@@ -206,17 +206,41 @@ const Landing = () => {
     }
 
     const handleSubmit = async () => {
-        if (!expectedOutput) return;
-        if (!outputDetails) return;
-
-        // Regex to remove only newlines at the start and end of a string
-        const regex = /^\s+|\s+$/g;
-
-        if (atob(outputDetails.stdout).replace(regex, "") === expectedOutput) {
-            console.log("Correct!");
-        } else {
-            console.log("Incorrect!");
+        // Form data to send
+        const formData = {
+            language_id: language.id,
+            source_code: btoa(unescape(encodeURIComponent(code))),
+            command_line_arguments: customInput,
         }
+
+        getCodeToken(formData).then((token) => {
+            getCodeOutput(token).then((res) => {
+                let statusId = res.status?.id;
+    
+                if (statusId === 1 || statusId === 2) {
+                    // Still processing (try again)
+                    setTimeout(() => {
+                        checkStatus(token);
+                    }, 2000)
+    
+                    return;
+                }
+
+                // Regex to remove only newlines at the start and end of a string
+                const regex = /^\s+|\s+$/g;
+
+                // TODO: Test case popup stuff happens here
+                if (atob(res.stdout).replace(regex, "") === expectedOutput) {
+                    console.log("Correct!");
+                } else {
+                    console.log("Incorrect!");
+                }
+            }).catch(err => {
+                console.log("err", err);
+            })
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     // Set default theme when page loads
