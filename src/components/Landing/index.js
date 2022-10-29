@@ -33,6 +33,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import InfoSection from "../InfoSection";
 import Form from "react-bootstrap/Form";
+import { getCodeOutput, getCodeToken } from "../../api/ApiActions";
 
 const Landing = () => {
     // States, references (dev branch)
@@ -141,11 +142,9 @@ const Landing = () => {
     }
 
     const checkStatus = useCallback(async (token) => {
-        try {
-            let response = await AxiosInstance.get(`/submissions/${token}`)
-            let statusId = response.data.status?.id;
+        getCodeOutput(token).then((res) => {
+            let statusId = res.status?.id;
 
-            // Check for status
             if (statusId === 1 || statusId === 2) {
                 // Still processing (try again)
                 setTimeout(() => {
@@ -153,18 +152,16 @@ const Landing = () => {
                 }, 2000)
 
                 return;
-            } else {
-                setProcessing(false);
-                setOutputDetails(response.data);
-                showSuccessToast("Compiled Successfully!");
-                console.log("response.data", response.data);
-                return;
             }
-        } catch (error) {
-            console.log("err", error);
+
+            setProcessing(false);
+            setOutputDetails(res);
+            showSuccessToast("Compiled Successfully!");
+        }).catch(err => {
+            console.log("err", err);
             setProcessing(false);
             showErrorToast();
-        }
+        })
     }, []);
 
     const handleCompile = useCallback(async () => {
@@ -177,21 +174,10 @@ const Landing = () => {
             command_line_arguments: customInput,
         }
 
-        AxiosInstance.post("/submissions", formData).then((response) => {
-            console.log("res.data", response.data);
-
-            // Response received (check status)
-            const token = response.data.token;
+        getCodeToken(formData).then((token) => {
             checkStatus(token);
-        }).catch((error) => {
-            console.log(error.response ? error.response.data : error);
-            console.log("status", error.response.status);
-
-            // Check requests quota
-            if (error.response.status === 429) {
-                console.log("Quota exceeded!");
-            }
-
+        }).catch(err => {
+            console.log(err);
             setProcessing(false);
         })
     }, [language, code, customInput, checkStatus]);
