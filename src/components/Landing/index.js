@@ -27,12 +27,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
-import AxiosInstance from "../../assets/Axios/AxiosInstance";
 
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import InfoSection from "../InfoSection";
 import Form from "react-bootstrap/Form";
+
+// API functions
 import { getCodeOutput, getCodeToken } from "../../api/ApiActions";
 
 const Landing = () => {
@@ -63,19 +64,6 @@ const Landing = () => {
             console.log(err);
         })
     }, [])
-
-    // Compare output of user's code to expected output
-    useEffect(() => {
-        if (!outputDetails) return;
-        if (!expectedOutput) return;
-
-        // Regex to remove only newlines at the start and end of a string
-        const regex = /^\s+|\s+$/g;
-
-        if (atob(outputDetails.stdout).replace(regex, "") === expectedOutput) {
-            console.log("Correct!");
-        }
-    }, [outputDetails, expectedOutput]);
 
     // Key presses
     const enterPress = useKeyPress("Enter");
