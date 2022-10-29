@@ -27,6 +27,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
+import AxiosInstance from "../../assets/Axios/AxiosInstance";
 
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -140,18 +141,8 @@ const Landing = () => {
     }
 
     const checkStatus = useCallback(async (token) => {
-        const options = {
-            method: "GET",
-            url: "https://judge0-ce.p.rapidapi.com/submissions/" + token,
-            params: { base64_encoded: "true", fields: "*" },
-            headers: {
-                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
-            }
-        }
-
         try {
-            let response = await axios.request(options);
+            let response = await AxiosInstance.get(`/submissions/${token}`)
             let statusId = response.data.status?.id;
 
             // Check for status
@@ -179,8 +170,6 @@ const Landing = () => {
     const handleCompile = useCallback(async () => {
         setProcessing(true);
 
-        console.log(code);
-
         // Form data to send
         const formData = {
             language_id: language.id,
@@ -188,20 +177,7 @@ const Landing = () => {
             command_line_arguments: customInput,
         }
 
-        const options = {
-            method: "POST",
-            url: "https://judge0-ce.p.rapidapi.com/submissions",
-            params: { base64_encoded: "true", fields: "*" },
-            headers: {
-                "content-type": "application/json",
-                "Content-Type": "application/json",
-                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
-            },
-            data: formData
-        }
-
-        axios.request(options).then((response) => {
+        AxiosInstance.post("/submissions", formData).then((response) => {
             console.log("res.data", response.data);
 
             // Response received (check status)
