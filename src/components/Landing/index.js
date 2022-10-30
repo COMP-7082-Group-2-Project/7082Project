@@ -12,6 +12,7 @@ import OutputWindow from "../OutputWindow";
 import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
 import SolutionModal from "../SolutionModal";
+import SubmissionModal from "../SubmissionModal";
 
 import SubmitImage from "../../assets/images/submit.png";
 
@@ -52,7 +53,9 @@ const Landing = () => {
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
 
+    // Conditional Rendering
     const [showHint, setShowHint] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     // Get challenge problems from backend on page load
     useEffect(() => {
@@ -194,6 +197,8 @@ const Landing = () => {
     }
 
     const handleSubmit = async () => {
+        setSubmitting(true);
+
         // Form data to send
         const formData = {
             language_id: language.id,
@@ -201,34 +206,34 @@ const Landing = () => {
             command_line_arguments: customInput,
         }
 
-        getCodeToken(formData).then((token) => {
-            getCodeOutput(token).then((res) => {
-                let statusId = res.status?.id;
-    
-                if (statusId === 1 || statusId === 2) {
-                    // Still processing (try again)
-                    setTimeout(() => {
-                        checkStatus(token);
-                    }, 2000)
-    
-                    return;
-                }
+        // getCodeToken(formData).then((token) => {
+        //     getCodeOutput(token).then((res) => {
+        //         let statusId = res.status?.id;
 
-                // Regex to remove only newlines at the start and end of a string
-                const regex = /^\s+|\s+$/g;
+        //         if (statusId === 1 || statusId === 2) {
+        //             // Still processing (try again)
+        //             setTimeout(() => {
+        //                 checkStatus(token);
+        //             }, 2000)
 
-                // TODO: Test case popup stuff happens here
-                if (atob(res.stdout).replace(regex, "") === expectedOutput) {
-                    console.log("Correct!");
-                } else {
-                    console.log("Incorrect!");
-                }
-            }).catch(err => {
-                console.log("err", err);
-            })
-        }).catch(err => {
-            console.log(err);
-        })
+        //             return;
+        //         }
+
+        //         // Regex to remove only newlines at the start and end of a string
+        //         const regex = /^\s+|\s+$/g;
+
+        //         // TODO: Test case popup stuff happens here
+        //         if (atob(res.stdout).replace(regex, "") === expectedOutput) {
+        //             console.log("Correct!");
+        //         } else {
+        //             console.log("Incorrect!");
+        //         }
+        //     }).catch(err => {
+        //         console.log("err", err);
+        //     })
+        // }).catch(err => {
+        //     console.log(err);
+        // })
     }
 
     // Set default theme when page loads
@@ -289,6 +294,12 @@ const Landing = () => {
                 showHint={showHint}
                 setShowHint={setShowHint}
                 currentProblem={currentProblem} />
+
+            {/* Submission Modal */}
+            <SubmissionModal
+                submitting={submitting}
+                setSubmitting={setSubmitting}
+                expectedOutput={expectedOutput} />
 
             <LandingNav></LandingNav>
             <LandingContainer>
