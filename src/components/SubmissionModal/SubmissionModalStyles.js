@@ -6,9 +6,12 @@ export const SubmitModal = styled(Modal)`
         width: 70vw !important;
         max-width: 1200px !important;
     }
-`;
 
-export const Spinner = styled.div``;
+    .modal-content {
+        background-color: #232323;
+        color: #f3f3f3;
+    }
+`;
 
 export const Wrapper = styled.div`
     display: flex;
@@ -23,4 +26,11 @@ export const CountWrapper = styled.div`
 
 export const CountInfo = styled.span`
     margin-left: 1rem;
+`;
+
+export const SpinnerWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
 `;

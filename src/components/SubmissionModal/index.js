@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import CountUp from "react-countup";
+import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import {
-    SubmitModal, Spinner, Wrapper,
-    CountWrapper, CountInfo
+    SubmitModal, Wrapper, CountWrapper,
+    CountInfo, SpinnerWrapper
 } from "./SubmissionModalStyles";
 
 const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSolution }) => {
@@ -22,8 +23,6 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
         expectedOutput.split("\n").forEach((answer, idx) => {
             if (answer === userSolution[idx]) numCorrect++;
         })
-
-        console.log(numCorrect);
 
         setNumPassed(numCorrect);
     }, [expectedOutput, userSolution])
@@ -52,16 +51,21 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
         unchecked: { stroke: "#ddd", strokeWidth: 50 }
     };
 
+    const resetModal = () => {
+        setSubmitting(false);
+        setIsChecked(false);
+        setNumPassed(null);
+    }
+
+    const headerText = numPassed === null ? "Submitting..." : numPassed === 3 ? "Challenge Passed!" : "Challenge Failed. Try Again!";
+
     return (
-        <SubmitModal show={submitting} onHide={() => setSubmitting(false)}>
+        <SubmitModal show={submitting} onHide={resetModal}>
             <SubmitModal.Header>
-                <SubmitModal.Title>Submitting...</SubmitModal.Title>
+                <SubmitModal.Title>{headerText}</SubmitModal.Title>
             </SubmitModal.Header>
             <SubmitModal.Body>
-                <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
-                {numPassed !== null && (
+                {numPassed !== null ? (
                     <Wrapper>
                         <motion.svg
                             initial={false}
@@ -108,6 +112,10 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
                             <CountInfo>/ {userSolution.length} Test Cases Passed</CountInfo>
                         </CountWrapper>
                     </Wrapper>
+                ) : (
+                    <SpinnerWrapper>
+                        <ClimbingBoxLoader color="#36d7b7" size={50} />
+                    </SpinnerWrapper>
                 )}
             </SubmitModal.Body>
         </SubmitModal>
