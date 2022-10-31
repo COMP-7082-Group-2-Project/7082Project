@@ -52,6 +52,7 @@ const Landing = () => {
     const [endComments, setEndComments] = useState({});
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
+    const [userSolution, setUserSolution] = useState(null);
 
     // Conditional Rendering
     const [showHint, setShowHint] = useState(false);
@@ -206,34 +207,32 @@ const Landing = () => {
             command_line_arguments: customInput,
         }
 
-        // getCodeToken(formData).then((token) => {
-        //     getCodeOutput(token).then((res) => {
-        //         let statusId = res.status?.id;
+        getCodeToken(formData).then((token) => {
+            getCodeOutput(token).then((res) => {
+                let statusId = res.status?.id;
 
-        //         if (statusId === 1 || statusId === 2) {
-        //             // Still processing (try again)
-        //             setTimeout(() => {
-        //                 checkStatus(token);
-        //             }, 2000)
+                if (statusId === 1 || statusId === 2) {
+                    // Still processing (try again)
+                    setTimeout(() => {
+                        checkStatus(token);
+                    }, 2000)
 
-        //             return;
-        //         }
+                    return;
+                }
 
-        //         // Regex to remove only newlines at the start and end of a string
-        //         const regex = /^\s+|\s+$/g;
+                // Regex to remove only newlines at the start and end of a string
+                const regex = /^\s+|\s+$/g;
 
-        //         // TODO: Test case popup stuff happens here
-        //         if (atob(res.stdout).replace(regex, "") === expectedOutput) {
-        //             console.log("Correct!");
-        //         } else {
-        //             console.log("Incorrect!");
-        //         }
-        //     }).catch(err => {
-        //         console.log("err", err);
-        //     })
-        // }).catch(err => {
-        //     console.log(err);
-        // })
+                // Remove new lines, convert to ASCII, and split into test cases
+                setUserSolution(atob(res.stdout).replace(regex, "").split("\n"));
+            }).catch(err => {
+                console.log("err", err);
+                setSubmitting(false);
+            })
+        }).catch(err => {
+            console.log(err);
+            setSubmitting(false);
+        })
     }
 
     // Set default theme when page loads
@@ -299,7 +298,8 @@ const Landing = () => {
             <SubmissionModal
                 submitting={submitting}
                 setSubmitting={setSubmitting}
-                expectedOutput={expectedOutput} />
+                expectedOutput={expectedOutput}
+                userSolution={userSolution} />
 
             <LandingNav></LandingNav>
             <LandingContainer>
