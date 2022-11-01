@@ -26,6 +26,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "e2e-test": "cypress open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -47,8 +48,10 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/cypress": "^8.0.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "cypress": "^10.11.0",
     "react-test-renderer": "^18.2.0"
   }
 }
