@@ -75,12 +75,16 @@ export const ButtonWrapper = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 1rem;
-    gap: 2.5rem;
+    gap: 2rem;
 
-    @media screen and (max-width: 1600px) {
+    & > svg {
+        min-width: 50px;
+    }
+
+    /* @media screen and (max-width: 1600px) {
         flex-direction: column;
         width: 100%;
-    }
+    } */
 `;
 
 export const SkipButton = styled(MdShuffleOn)`

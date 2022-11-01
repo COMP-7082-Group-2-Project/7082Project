@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
+import { BsCheck2Circle } from "react-icons/bs";
 
 export const SubmitModal = styled(Modal)`
     & > * {
@@ -17,16 +18,20 @@ export const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    /* gap: 5rem; */
     min-height: 440px;
 `;
 
-export const CountWrapper = styled.div`
-    font-size: 2rem;
-    font-weight: 700;
-`;
+export const CheckmarkIcon = styled(BsCheck2Circle)`
+    font-size: 10rem;
+    color: #36d7b7;
+    margin-right: 5rem;
+`
 
-export const CountInfo = styled.span`
-    margin-left: 1rem;
+export const TestInfo = styled.p`
+    font-size: 2rem;
+    font-weight: 600;
+    color: #f3f3f3;
 `;
 
 export const SpinnerWrapper = styled.div`
@@ -34,6 +39,10 @@ export const SpinnerWrapper = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 300px;
+`;
+
+export const CrossIcon = styled.svg`
+    width: 15rem;
 `;
 
 export const NextButton = styled.button`
