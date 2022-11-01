@@ -76,6 +76,15 @@ export const ButtonWrapper = styled.div`
     align-items: center;
     margin-top: 1rem;
     gap: 2rem;
+
+    & > svg {
+        min-width: 50px;
+    }
+
+    /* @media screen and (max-width: 1600px) {
+        flex-direction: column;
+        width: 100%;
+    } */
 `;
 
 export const SkipButton = styled(MdShuffleOn)`
@@ -93,3 +102,11 @@ export const HintButton = styled(HiOutlineLightBulb)`
     opacity: ${({ disabled }) => disabled && "0.5"};
     user-select: none;
 `;
+
+export const SubmitButton = styled.img`
+    width: 3rem;
+    height: 3rem;
+    cursor: ${({ disabled }) => !disabled && "pointer"};
+    opacity: ${({ disabled }) => disabled && "0.5"};
+    user-select: none;
+`

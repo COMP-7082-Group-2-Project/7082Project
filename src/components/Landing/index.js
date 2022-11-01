@@ -12,13 +12,16 @@ import OutputWindow from "../OutputWindow";
 import CustomInput from "../CustomInput";
 import OutputDetails from "../OutputDetails";
 import SolutionModal from "../SolutionModal";
+import SubmissionModal from "../SubmissionModal";
+
+import SubmitImage from "../../assets/images/submit.png";
 
 import {
     LandingNav, LandingContainer, DropdownContainer,
     DropdownWrapper, MainContainer, CodeWrapper,
     OutputContainer, InputWrapper, ExecuteButton,
     FreeCodeWrapper, ButtonWrapper, SkipButton,
-    HintButton
+    HintButton, SubmitButton
 } from "./LandingStyles";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -30,6 +33,9 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import InfoSection from "../InfoSection";
 import Form from "react-bootstrap/Form";
+
+// API functions
+import { getCodeOutput, getCodeToken } from "../../api/ApiActions";
 
 const Landing = () => {
     // States, references (dev branch)
@@ -46,8 +52,11 @@ const Landing = () => {
     const [endComments, setEndComments] = useState({});
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
+    const [userSolution, setUserSolution] = useState(null);
 
+    // Conditional Rendering
     const [showHint, setShowHint] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     // Get challenge problems from backend on page load
     useEffect(() => {
@@ -59,19 +68,6 @@ const Landing = () => {
             console.log(err);
         })
     }, [])
-
-    // Compare output of user's code to expected output
-    useEffect(() => {
-        if (!outputDetails) return;
-        if (!expectedOutput) return;
-
-        // Regex to remove only newlines at the start and end of a string
-        const regex = /^\s+|\s+$/g;
-
-        if (atob(outputDetails.stdout).replace(regex, "") === expectedOutput) {
-            console.log("Correct!");
-        }
-    }, [outputDetails, expectedOutput]);
 
     // Key presses
     const enterPress = useKeyPress("Enter");
@@ -138,21 +134,9 @@ const Landing = () => {
     }
 
     const checkStatus = useCallback(async (token) => {
-        const options = {
-            method: "GET",
-            url: "https://judge0-ce.p.rapidapi.com/submissions/" + token,
-            params: { base64_encoded: "true", fields: "*" },
-            headers: {
-                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
-            }
-        }
+        getCodeOutput(token).then((res) => {
+            let statusId = res.status?.id;
 
-        try {
-            let response = await axios.request(options);
-            let statusId = response.data.status?.id;
-
-            // Check for status
             if (statusId === 1 || statusId === 2) {
                 // Still processing (try again)
                 setTimeout(() => {
@@ -160,24 +144,20 @@ const Landing = () => {
                 }, 2000)
 
                 return;
-            } else {
-                setProcessing(false);
-                setOutputDetails(response.data);
-                showSuccessToast("Compiled Successfully!");
-                console.log("response.data", response.data);
-                return;
             }
-        } catch (error) {
-            console.log("err", error);
+
+            setProcessing(false);
+            setOutputDetails(res);
+            showSuccessToast("Compiled Successfully!");
+        }).catch(err => {
+            console.log("err", err);
             setProcessing(false);
             showErrorToast();
-        }
+        })
     }, []);
 
     const handleCompile = useCallback(async () => {
         setProcessing(true);
-
-        console.log(code);
 
         // Form data to send
         const formData = {
@@ -186,34 +166,10 @@ const Landing = () => {
             command_line_arguments: customInput,
         }
 
-        const options = {
-            method: "POST",
-            url: "https://judge0-ce.p.rapidapi.com/submissions",
-            params: { base64_encoded: "true", fields: "*" },
-            headers: {
-                "content-type": "application/json",
-                "Content-Type": "application/json",
-                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
-            },
-            data: formData
-        }
-
-        axios.request(options).then((response) => {
-            console.log("res.data", response.data);
-
-            // Response received (check status)
-            const token = response.data.token;
+        getCodeToken(formData).then((token) => {
             checkStatus(token);
-        }).catch((error) => {
-            console.log(error.response ? error.response.data : error);
-            console.log("status", error.response.status);
-
-            // Check requests quota
-            if (error.response.status === 429) {
-                console.log("Quota exceeded!");
-            }
-
+        }).catch(err => {
+            console.log(err);
             setProcessing(false);
         })
     }, [language, code, customInput, checkStatus]);
@@ -239,6 +195,44 @@ const Landing = () => {
         }
 
         defineTheme(theme.value).then((_) => setTheme(theme));
+    }
+
+    const handleSubmit = async () => {
+        setSubmitting(true);
+
+        // Form data to send
+        const formData = {
+            language_id: language.id,
+            source_code: btoa(unescape(encodeURIComponent(code))),
+            command_line_arguments: customInput,
+        }
+
+        getCodeToken(formData).then((token) => {
+            getCodeOutput(token).then((res) => {
+                let statusId = res.status?.id;
+
+                if (statusId === 1 || statusId === 2) {
+                    // Still processing (try again)
+                    setTimeout(() => {
+                        checkStatus(token);
+                    }, 2000)
+
+                    return;
+                }
+
+                // Regex to remove only newlines at the start and end of a string
+                const regex = /^\s+|\s+$/g;
+
+                // Remove new lines, convert to ASCII, and split into test cases
+                setUserSolution(atob(res.stdout).replace(regex, "").split("\n"));
+            }).catch(err => {
+                console.log("err", err);
+                setSubmitting(false);
+            })
+        }).catch(err => {
+            console.log(err);
+            setSubmitting(false);
+        })
     }
 
     // Set default theme when page loads
@@ -299,6 +293,19 @@ const Landing = () => {
                 showHint={showHint}
                 setShowHint={setShowHint}
                 currentProblem={currentProblem} />
+
+            {/* Submission Modal */}
+            <SubmissionModal
+                submitting={submitting}
+                setSubmitting={setSubmitting}
+                expectedOutput={expectedOutput}
+                userSolution={userSolution}
+                randomizeProblem={randomizeProblem}
+                comments={{
+                    start: startComments[language.value],
+                    end: endComments[language.value]
+                }}
+                difficulty={difficulty} />
 
             <LandingNav></LandingNav>
             <LandingContainer>
@@ -364,6 +371,7 @@ const Landing = () => {
                                 <ExecuteButton onClick={handleCompile} disabled={!code}>
                                     {processing ? "Processing..." : "Compile and Execute"}
                                 </ExecuteButton>
+                                <SubmitButton src={SubmitImage} alt="Submit" disabled={freeMode} onClick={handleSubmit} />
                             </ButtonWrapper>
                         </InputWrapper>
                         {outputDetails &&

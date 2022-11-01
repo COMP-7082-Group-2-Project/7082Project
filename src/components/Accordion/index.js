@@ -17,8 +17,6 @@ const Accordion = ({ id, explanations }) => {
     // Method to reveal the content
     const toggle = idx => setClicked(clicked === idx ? null : idx);
 
-    console.log(explanations);
-
     return (
         <>
             <IconContext.Provider value={{ color: '#00ffb9', size: '25px' }}>
