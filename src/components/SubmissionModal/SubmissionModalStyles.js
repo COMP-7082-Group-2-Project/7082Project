@@ -48,8 +48,7 @@ export const CrossIcon = styled.svg`
 export const NextButton = styled.button`
     display: inline-block;
     padding: 0.5rem 1rem;
-    /* Green background color */
-    background-color: #00b32d;
+    background-color: #36d7b7;
     border: 2px solid #000000;
     border-radius: 0.375rem;
     /* margin-top: 1rem; */

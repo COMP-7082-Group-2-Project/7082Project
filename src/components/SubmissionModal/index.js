@@ -8,7 +8,7 @@ import {
 
 import "animate.css";
 
-const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSolution }) => {
+const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSolution, randomizeProblem, comments, difficulty }) => {
     const [numPassed, setNumPassed] = useState(null);
 
     useEffect(() => {
@@ -80,7 +80,7 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
                                 />
                             </CrossIcon>
                         )}
-                        <TestInfo>{numPassed} / {userSolution.length} Test Cases Passed</TestInfo>
+                        <TestInfo>{numPassed} / 3 Test Cases Passed</TestInfo>
                     </Wrapper>
                 ) : (
                     <SpinnerWrapper>
@@ -89,6 +89,23 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
                 )}
             </SubmitModal.Body>
             <SubmitModal.Footer>
+                {numPassed !== null ? numPassed === 3 ? (
+                    <NextButton
+                        className="animate__animated animate__heartBeat animate__infinite animate__delay-1s"
+                        onClick={() => {
+                            console.log(comments.start, comments.end, difficulty);
+                            randomizeProblem(comments.start, comments.end, difficulty)
+                            resetModal();
+                        }}>
+                        Next Challenge
+                    </NextButton>
+                ) : (
+                    <RedoButton
+                        className="animate__animated animate__heartBeat animate__infinite animate__delay-1s"
+                        onClick={() => resetModal()}>
+                        Redo Challenge
+                    </RedoButton>
+                ) : null}
             </SubmitModal.Footer>
         </SubmitModal>
     )

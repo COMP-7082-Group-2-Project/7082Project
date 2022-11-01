@@ -299,7 +299,13 @@ const Landing = () => {
                 submitting={submitting}
                 setSubmitting={setSubmitting}
                 expectedOutput={expectedOutput}
-                userSolution={userSolution} />
+                userSolution={userSolution}
+                randomizeProblem={randomizeProblem}
+                comments={{
+                    start: startComments[language.value],
+                    end: endComments[language.value]
+                }}
+                difficulty={difficulty} />
 
             <LandingNav></LandingNav>
             <LandingContainer>
