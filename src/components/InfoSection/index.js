@@ -7,8 +7,10 @@ import {
     CPlusPlusIcon, JavaIcon, ThemeSection,
     DifficultySection, ButtonInfoWrapper, SkipIcon,
     HintIcon, FreeWrite, CheckBoxWrapper,
-    RightArrowIcon
+    RightArrowIcon, SubmitIcon
 } from "./InfoSectionStyles";
+
+import SubmitImage from "../../assets/images/submit.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGolang } from "@fortawesome/free-brands-svg-icons";
@@ -63,6 +65,10 @@ const InfoSection = () => {
                 <ButtonInfoWrapper>
                     <h3>Can't solve a problem? Check out our example solutions! Click</h3>
                     <HintIcon />
+                </ButtonInfoWrapper>
+                <ButtonInfoWrapper>
+                    <h3>Ready to test your solution? Click</h3>
+                    <SubmitIcon src={SubmitImage} alt="Submit" />
                 </ButtonInfoWrapper>
 
                 <FreeWrite>

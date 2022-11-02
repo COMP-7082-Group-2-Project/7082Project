@@ -21,7 +21,7 @@ import {
     DropdownWrapper, MainContainer, CodeWrapper,
     OutputContainer, InputWrapper, ExecuteButton,
     FreeCodeWrapper, ButtonWrapper, SkipButton,
-    HintButton, SubmitButton
+    HintButton, SubmitButton, Circle, ClipboardIcon
 } from "./LandingStyles";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -235,6 +235,16 @@ const Landing = () => {
         })
     }
 
+    // Handle copying of code to clipboard
+    const handleCopy = () => {
+        navigator.clipboard.writeText(code).then(() => {
+            showSuccessToast("Copied to Clipboard!");
+        }).catch(err => {
+            console.log(err);
+            showErrorToast();
+        })
+    }
+
     // Set default theme when page loads
     useEffect(() => {
         defineTheme("oceanic-next").then((_) => {
@@ -340,7 +350,7 @@ const Landing = () => {
                 <MainContainer>
                     <CodeWrapper>
                         <Tabs defaultActiveKey="editor" className="mb-3" justify>
-                            <Tab eventKey="editor" title="Editor">
+                            <Tab eventKey="editor" title="Editor" className="editor-tab">
                                 <CodeEditor
                                     key={`editor-${difficulty}-${language.value}-${freeMode}-${expectedOutput}`}
                                     code={code}
@@ -349,8 +359,11 @@ const Landing = () => {
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}
                                 />
+                                <Circle onClick={handleCopy}>
+                                    <ClipboardIcon />
+                                </Circle>
                             </Tab>
-                            <Tab eventKey="manual" title="How To">
+                            <Tab eventKey="manual" title="How To" className="howto-tab">
                                 <InfoSection />
                             </Tab>
                         </Tabs>
