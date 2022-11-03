@@ -63,7 +63,7 @@ const InfoSection = () => {
                     <SkipIcon />
                 </ButtonInfoWrapper>
                 <ButtonInfoWrapper>
-                    <h3>Can't solve a problem? Check out our example solutions! Click</h3>
+                    <h3>Want to see our example solutions? Click</h3>
                     <HintIcon />
                 </ButtonInfoWrapper>
                 <ButtonInfoWrapper>
