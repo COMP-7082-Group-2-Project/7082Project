@@ -3,8 +3,6 @@ import Accordion from "../Accordion";
 import { SolutionModal, CloseIcon } from "./SolutionModalStyles";
 
 const HintModal = ({ showHint, setShowHint, currentProblem }) => {
-    console.log(currentProblem);
-
     return (
         <>
             {currentProblem && (

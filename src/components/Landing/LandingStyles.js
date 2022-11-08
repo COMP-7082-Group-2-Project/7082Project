@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { MdShuffleOn } from "react-icons/md";
 import { HiOutlineLightBulb } from "react-icons/hi";
+import { FaRegClipboard } from "react-icons/fa";
 
 export const LandingNav = styled.div`
     background-image: linear-gradient(to right, #ec4899, #ef4444, #f59e0b);
@@ -29,6 +30,10 @@ export const MainContainer = styled.div`
 
 export const CodeWrapper = styled.div`
     width: 70%;
+
+    .editor-tab {
+        position: relative;
+    }
 `
 
 export const OutputContainer = styled.div`
@@ -76,6 +81,16 @@ export const ButtonWrapper = styled.div`
     align-items: center;
     margin-top: 1rem;
     gap: 2rem;
+
+    & > svg {
+        min-width: 50px;
+    }
+
+    @media screen and (min-width: 1600px) {
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+    }
 `;
 
 export const SkipButton = styled(MdShuffleOn)`
@@ -92,4 +107,30 @@ export const HintButton = styled(HiOutlineLightBulb)`
     cursor: ${({ disabled }) => !disabled && "pointer"};
     opacity: ${({ disabled }) => disabled && "0.5"};
     user-select: none;
+`;
+
+export const SubmitButton = styled.img`
+    width: 3rem;
+    height: 3rem;
+    cursor: ${({ disabled }) => !disabled && "pointer"};
+    opacity: ${({ disabled }) => disabled && "0.5"};
+    user-select: none;
+`
+
+export const ClipboardIcon = styled(FaRegClipboard)`
+    font-size: 3rem;
+    z-index: 1;
+`;
+
+export const Circle = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1.5rem;
+    background-color: #f3f3f3;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
 `;

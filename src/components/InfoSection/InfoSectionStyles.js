@@ -126,3 +126,9 @@ export const RightArrowIcon = styled(FaLongArrowAltRight)`
     margin: 0 2rem;
     color: rgba(0, 0, 0, 0.8);
 `;
+
+export const SubmitIcon = styled.img`
+    width: 3rem;
+    height: 3rem;
+    user-select: none;
+`
