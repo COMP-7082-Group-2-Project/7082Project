@@ -9,3 +9,4 @@ We should perform the following three types of tests:
 Anotehr form of testing that is common in React is:
 
 * Snap Shot Testing
+* Heelo world! 
