@@ -5,19 +5,22 @@ import { CustomStyles } from "../styles/CustomStyles";
 
 const ThemeDropdown = ({ handleThemeChange, theme }) => {
     return (
-        <Select
-            placeholder={`Select Theme`}
-            options={Object.entries(monacoThemes).map(([themeID, themeName]) => {
-                return {
-                    label: themeName,
-                    value: themeID,
-                    key: themeID
-                }
-            })}
-            value={theme}
-            styles={CustomStyles}
-            onChange={handleThemeChange}
-        />
+        <div data-testid="theme-dropdown-wrapper">
+            <Select
+                role="theme-dropdown"
+                placeholder={`Select Theme`}
+                options={Object.entries(monacoThemes).map(([themeID, themeName]) => {
+                    return {
+                        label: themeName,
+                        value: themeID,
+                        key: themeID
+                    }
+                })}
+                value={theme}
+                styles={CustomStyles}
+                onChange={handleThemeChange}
+            />
+        </div>
     )
 }
 

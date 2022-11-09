@@ -1,6 +1,7 @@
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, fireEvent, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom'
 import App from '../App';
+import ThemeDropdown from "../components/ThemeDropdown";
 
 afterEach(() => {
     cleanup();
@@ -11,7 +12,7 @@ test('default test', () => {
 });
 
 test('renders "Compile and Execute" button', () => {
-  render(<App />);
-  const compile_button = screen.getByText(/compile and execute/i);
-  expect(compile_button).toBeInTheDocument();
+    render(<App />);
+    const compile_button = screen.getByText(/compile and execute/i);
+    expect(compile_button).toBeInTheDocument();
 });
