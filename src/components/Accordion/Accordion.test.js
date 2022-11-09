@@ -14,7 +14,7 @@ test("accordian on render", () => {
 
 // //Toggle
 test("accordian on toggle", () => {
-    render(<Accordian/>);
+    render(<Accordian id={2} explanations={explanation}/>);
     expect(screen.getByText(/Example Solutions/i));
 });
 
