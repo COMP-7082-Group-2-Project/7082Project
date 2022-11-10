@@ -8,7 +8,7 @@ const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
     const [selectedOption, setSelectedOption] = useState(null);
 
     // Constants
-    const supportedLanguages = ["javascript", "python","java","c", "cpp", "csharp", "go", "ruby", "swift","php"]
+    const supportedLanguages = ["javascript", "python", "java", "c", "cpp", "csharp", "go", "ruby", "swift", "php"]
 
     const handleChange = (e) => {
         setSelectedOption(e);
@@ -27,16 +27,18 @@ const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
     }, [freeMode])
 
     return (
-        <Select
-            placeholder={`Select Difficulty`}
-            value={selectedOption}
-            options={DifficultyOptions}
-            styles={CustomStyles}
-            defaultValue={DifficultyOptions[0]}
-            onChange={handleChange}
-            isDisabled={!supportedLanguages.includes(language)}
-            isOptionDisabled={(option) => option === selectedOption}
-        />
+        <div data-testid="difficulty-dropdown-wrapper">
+            <Select
+                placeholder={`Select Difficulty`}
+                value={selectedOption}
+                options={DifficultyOptions}
+                styles={CustomStyles}
+                defaultValue={DifficultyOptions[0]}
+                onChange={handleChange}
+                isDisabled={!supportedLanguages.includes(language)}
+                isOptionDisabled={(option) => option === selectedOption}
+            />
+        </div>
     )
 }
 

@@ -5,14 +5,16 @@ import { LanguageOptions } from "../data/LanguageOptions";
 
 const LanguageDropdown = ({ onSelectChange }) => {
     return (
-        <Select
-            placeholder={`Filter By Category`}
-            options={LanguageOptions}
-            styles={CustomStyles}
-            defaultValue={LanguageOptions[0]}
-            onChange={(selectedOption) => onSelectChange(selectedOption)}
-        />
-    ) 
+        <div data-testid="language-dropdown-wrapper">
+            <Select
+                placeholder={`Filter By Category`}
+                options={LanguageOptions}
+                styles={CustomStyles}
+                defaultValue={LanguageOptions[0]}
+                onChange={(selectedOption) => onSelectChange(selectedOption)}
+            />
+        </div>
+    )
 }
 
 export default LanguageDropdown

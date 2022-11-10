@@ -7,7 +7,6 @@ const ThemeDropdown = ({ handleThemeChange, theme }) => {
     return (
         <div data-testid="theme-dropdown-wrapper">
             <Select
-                role="theme-dropdown"
                 placeholder={`Select Theme`}
                 options={Object.entries(monacoThemes).map(([themeID, themeName]) => {
                     return {
