@@ -381,7 +381,10 @@ const Landing = () => {
                                     disabled={freeMode}
                                     onClick={() => randomizeProblem(startComments[language.value], endComments[language.value], difficulty)} />
                                 <HintButton disabled={freeMode} onClick={showHintModal} />
-                                <ExecuteButton onClick={handleCompile} disabled={!code}>
+                                <ExecuteButton
+                                data-testid="execute-button" 
+                                onClick={handleCompile}
+                                disabled={!code}>
                                     {processing ? "Processing..." : "Compile and Execute"}
                                 </ExecuteButton>
                                 <SubmitButton src={SubmitImage} alt="Submit" disabled={freeMode} onClick={handleSubmit} />
