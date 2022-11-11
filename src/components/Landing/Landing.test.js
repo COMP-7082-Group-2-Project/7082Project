@@ -1,8 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { select } from "react-select-event";
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom'
 import Landing from "./index";
-import { act } from "react-test-renderer";
 
 // Check if Landing page renders
 test("Renders the Landing page", () => {
@@ -16,18 +14,10 @@ test("Renders the Landing page", () => {
 })
 
 // Check if default theme is loaded
-test("Default theme is loaded", async () => {
+test("Default theme is loaded", () => {
     render(<Landing />);
 
-    const themeDropdownWrapper = screen.getByTestId("theme-dropdown-wrapper");
-
-    select(themeDropdownWrapper.firstChild, // eslint-disable-line
-        {
-            value: "oceanic-next",
-            label: "Oceanic Next"
-        }
-    );
-
-    // Check if default theme is loaded
-    expect(screen.getByText("Oceanic Next")).toBeInTheDocument();
+    setTimeout(() => {
+        expect(screen.getByText("Oceanic Next")).toBeInTheDocument();
+    }, 1000);
 })
