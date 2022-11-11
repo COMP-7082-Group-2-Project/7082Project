@@ -20,7 +20,7 @@ import Form from "react-bootstrap/Form";
 const InfoSection = () => {
     return (
         <InfoContainer>
-            <InfoWrapper>
+            <InfoWrapper data-testid="info-section">
                 <WelcomeHeader>
                     <WelcomeHeading>Welcome to EdiCode!</WelcomeHeading>
                     <CodeIcon />
