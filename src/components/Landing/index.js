@@ -285,7 +285,7 @@ const Landing = () => {
     }
 
     return (
-        <>
+        <div data-testid="landing-container">
             <ToastContainer
                 position="top-right"
                 autoClose={2000}
@@ -392,7 +392,7 @@ const Landing = () => {
                     </OutputContainer>
                 </MainContainer>
             </LandingContainer>
-        </>
+        </div>
     )
 }
 
