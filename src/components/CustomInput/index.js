@@ -6,6 +6,7 @@ const CustomInput = ({ customInput, setCustomInput }) => {
         <>
             {" "}
             <InputArea
+                data-testid="custom-input"
                 rows="5"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
