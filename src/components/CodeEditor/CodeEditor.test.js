@@ -56,40 +56,20 @@ test("Check if Code Editor loads default language", () => {
     expect(codeEditor).toHaveAttribute("language", "javascript");
 })
 
-// test("Toggle accordion displays correct image and text", () => {
-//     render(
-//         <Accordion id={1} explanations={
-//             {
-//                 "javascript": [
-//                     "The addition operator (+) adds two numbers together",
-//                     "ES6 Arrow Syntax is used to define the function",
-//                     "The return keyword can be omitted for single line arrow functions"
-//                 ],
-//                 "python": [
-//                     "The addition operator (+) adds two numbers together",
-//                     "The return keyword is used to return the result of the function"
-//                 ]
-//             }
-//         } />
-//     );
+test("Changes Code Editor content when typing", () => {
+    render(<CodeEditor mode="free" />);
 
-//     // Select the accordion
-//     const accordion = screen.getByTestId("accordion");
+    // Select the Code Editor
+    const codeEditor = screen.getByTestId("mock-editor");
 
-//     // Select the second child (first toggle)
-//     const toggle = accordion.childNodes[1];
+    // Check if Code Editor has Welcome Message
+    expect(codeEditor).toHaveValue(javascriptDefault);
 
-//     // Click the toggle
-//     act(() => {
-//         toggle.click();
-//     })
+    // Simulate typing in the Code Editor
+    act(() => {
+        codeEditor.value += "console.log('Hello World!')";
+    });
 
-//     // Select the code image from the expanded toggle
-//     const codeImage = screen.getByTestId("code-image");
-
-//     // Check if the image and explanation is correct based on the alt text and text content
-//     expect(codeImage.alt).toBe("JavaScript Challenge Solution");
-
-//     // Check if the explanation list has the correct text
-//     expect(screen.getByText("The addition operator (+) adds two numbers together")).toBeInTheDocument();
-// })
+    // Check if Code Editor has new content
+    expect(codeEditor).toHaveValue(javascriptDefault + "console.log('Hello World!')");
+})
