@@ -1,152 +1,185 @@
 /**
- * As a programmer, I want to be able to write and execute code without setting up a local environment, so that I can follow tutorials and practice coding with ease.
- * As a programmer, I would like to practice different programming languages, so that I can diversify my skill set.
- * As a programmer, I want to be able to choose a challenge difficulty that suits my skill level so that I can challenge myself appropriately.
- * As a programmer, I want to be able to change the UI theme of my editor so that it suits my preferences
- * As a programmer, I want to be able to skip a specific coding challenge so that I can attempt a new problem
- * As a beginner programmer, I want to be able to ask for small hints to solve a specific challenge so that I can get on the right track.
+End to End Tests to Validate User Story Accpetance Tests.
  */
 
 import '@testing-library/cypress/add-commands'
+import { createGlobalStyle } from 'styled-components';
 
-describe('Default Compile and Execute Test', () => {
-  it('Open Webpage', () => {
-    cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
-  })
-  
-  it('click on "Compile and Execute" button', () => {
-    const compile_button = cy.findByText(/compile and execute/i);
-    compile_button.click();
-  })
-
-  it('Check existance of output in window', () => {
-    const output_window = cy.findByText(/output/i).next();
-    output_window.should('have.text', 'ée');
-  })
+Cypress.on('uncaught:exception', (err, runnable) => {
+  return false;
 });
 
-describe('Write Code, Compile and Execute, and See Output Test.', () => {
-  it('Open Webpage', () => {
-    cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
-  })
+const laoding_time = 2000;
+const welcome_text = "/*Welcome to EdiCode! This is a code editor that allows you to write, compile, and execute code right in your browser.Start coding by typing in the editor below. You can change the language or theme in the dropdown menus above.You can also start a coding challenge by choosing a difficulty level in the dropdown menu above.Happy coding!*/";
 
-  // it('Write Javascript Console Log ("Hello World") into Code Editor', () => {
-  //   // Reference: https://stackoverflow.com/questions/56617522/testing-monaco-editor-with-cypress
+// describe('Write Code, Compile and Execute, and See Output Test.', () => {
+//   it('Open Webpage', () => {
+//     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
+//   })
 
-  //   cy.get('#editor')
-  //   .click()
-  //   // change subject to currently focused element
-  //   .focused()
-  //   .type('{ctrl}a')
-  //   .type('{rightArrow}')
-  //   .type('console.log("Hello World!");')
-  //   .type('{enter}')
-  // })
+//   // it('Write Javascript Console Log ("Hello World") into Code Editor', () => {
+//   //   // Reference: https://stackoverflow.com/questions/56617522/testing-monaco-editor-with-cypress
+
+//   //   cy.get('#editor')
+//   //   .click()
+//   //   // change subject to currently focused element
+//   //   .focused()
+//   //   .type('{ctrl}a')
+//   //   .type('{rightArrow}')
+//   //   .type('console.log("Hello World!");')
+//   //   .type('{enter}')
+//   // })
   
-  // it('click on "Compile and Execute" button', () => {
-  //   const compile_button = cy.findByText(/compile and execute/i);
-  //   compile_button.click();
-  // })
+//   // it('click on "Compile and Execute" button', () => {
+//   //   const compile_button = cy.findByText(/compile and execute/i);
+//   //   compile_button.click();
+//   // })
 
-  // it('Check existance / correctness of output in window', () => {
-  //   const output_window = cy.findByText(/output/i).next();
-  //   output_window.should('have.text', 'Hello World!');
-  // })
-});
+//   // it('Check existance / correctness of output in window', () => {
+//   //   const output_window = cy.findByText(/output/i).next();
+//   //   output_window.should('have.text', 'Hello World!');
+//   // })
+// });
 
-describe('Select Different Programming Language Test', () => {
-  it('Open Webpage', () => {
-    cy.visit('https://transcendent-tarsier-75164d.netlify.app/')
-  })
+// describe('Select Different Programming Language Test', () => {
+//   it('Open Webpage', () => {
+//     cy.visit('https://transcendent-tarsier-75164d.netlify.app/')
+//   })
 
-  it('click on Language Dropdown "Javascript" by Default', () => {
-    const dropdown = cy.get('.css-fjipxn-control').contains('JavaScript');
-    dropdown.click({force: true});
-  })
+//   it('click on Language Dropdown "Javascript" by Default', () => {
+//     const dropdown = cy.get('.css-fjipxn-control').contains('JavaScript');
+//     dropdown.click({force: true});
+//   })
 
-  it('click on Bash dropdown option', () => {
-    const dropdown_option = cy.get("#react-select-2-listbox").contains('Bash');
-    dropdown_option.trigger("onChange").click();
-  })
+//   it('click on Bash dropdown option', () => {
+//     const dropdown_option = cy.get("#react-select-2-listbox").contains('Bash');
+//     dropdown_option.trigger("onChange").click();
+//   })
 
-  it('test Bash langauge selected', () => {
-    const dropdown = cy.get('.css-qc6sy-singleValue').contains('Bash');
-    dropdown.should('be.visible');
-  })
-}); 
+//   it('test Bash langauge selected', () => {
+//     const dropdown = cy.get('.css-qc6sy-singleValue').contains('Bash');
+//     dropdown.should('be.visible');
+//   })
+// }); 
+
+/*
+<span><span class="mtk1">console</span><span class="mtk15">.</span><span class="mtk1">log</span><span class="mtk15">(</span><span class="mtk14">"Hello&nbsp;World!"</span><span class="mtk15">);</span></span>
+*/
 
 describe('Choose Challenge Difficulty Test', () => {
+  let previous_problem = "";
   it('Open Webpage', () => {
     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
   })
 
-  it('test that submit button is diabled', () => {
-    cy.get('[alt="Submit"]').should('not.be.enabled');
-  })
+  it('Test that text in code editor before selecting challenge problem to after selecting challenge problem canged', () => {
+    cy.wait(laoding_time);
+    cy.get('.view-lines')
+    // cy.get('.view-lines:nth-child(2)')
+    .invoke('text')
+    .then((text1) => {
+      expect(text1).to.eq(welcome_text);
+      
+      // Click on dropdown
+      const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
+      dropdown.click({force: true});
+      
+      // Click on easy dropdown option
+      const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
+      dropdown_option.trigger("onChange").click();
 
-  it('click on Challenge Dropdown "Select Difficulty" by Default', () => {
-    const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
-    dropdown.click({force: true});
-  })
-
-  it('click on "Easy" dropdown option', () => {
-    const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
-    dropdown_option.trigger("onChange").click();
-  })
-
-  it('test that submit button is enabled', () => {
-    cy.get('[alt="Submit"]').should('not.be.disabled');
+      // Compare problem text to welcome text
+      cy.get('.view-lines')
+      .invoke('text')
+      .should((text2) => {
+        expect(text1).not.to.eq(text2)
+      });
+    })
   })
 });
 
-describe('Change UI Theme Test', () => {
-  it('Open Webpage', () => {
-    cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
-  })
+// describe('Change UI Theme Test', () => {
+//   it('Open Webpage', () => {
+//     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
+//     cy.wait(laoding_time);
+//   })
 
-  it('click on Theme Dropdown "Oceanic Next" by Default', () => {
-    const dropdown = cy.get('.css-fjipxn-control').contains('Oceanic');;
-    dropdown.click({force: true});
-  })
+//   it('Test Default Theme "Oceanic Next"', () => {
+//     cy.findByRole('code').get('.monaco-editor');
+//     //.should('have.css', '--vscode-editor-background', '#1b2b34')
+//   })
 
-  it('click on "Blackboard" dropdown option', () => {
-    const dropdown_option = cy.get("#react-select-3-listbox").contains('Blackboard');
-    dropdown_option.trigger("onChange").click();
-  })
+//   it('click on Theme Dropdown', () => {
+//     const dropdown = cy.get('.css-fjipxn-control').contains('Oceanic');;
+//     dropdown.click({force: true});
+//   })
 
-  it('test Blackboard theme selected', () => {
-    const dropdown = cy.get('.css-qc6sy-singleValue').contains('Blackboard');
-    dropdown.should('be.visible');
-  })
-});
+//   it('click on "Blackboard" dropdown option', () => {
+//     const dropdown_option = cy.get("#react-select-3-listbox").contains('Blackboard');
+//     dropdown_option.trigger("onChange").click();
+//   })
+
+//   it('test Blackboard theme selected', () => {
+//     const dropdown = cy.get('.css-qc6sy-singleValue').contains('Blackboard');
+//     dropdown.should('be.visible');
+//   })
+
+//   it('test Blackboard theme applied', () => {
+//     cy.wait(laoding_time);
+//     cy.findByRole('code').get('.monaco-editor').should('have.css', '--vscode-editor-background', '#0c1021')
+//     // --vscode-editor-background: #1b2b34
+//     //--vscode-editor-background: #0c1021
+//   })
+// });
 
 describe('Skip Challenge Problem Test', () => {
   it('Open Webpage', () => {
     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
   })
 
-  // it('test that skip button is diabled', () => {
-  //   cy.get('.sc-cabOPr kHQtFW');
-  //   // cy.get('svg').get('.sc-cabOPr kHQtFW').should('be.disabled');
-  // })
+  it('switch to an easy challenge problem', () => {
+    cy.wait(laoding_time);
+    cy.get('.view-lines')
+    .invoke('text')
+    .then((text1) => {
+      expect(text1).to.eq(welcome_text);
+      
+      // Click on dropdown
+      const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
+      dropdown.click({force: true});
+      
+      // Click on easy dropdown option
+      const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
+      dropdown_option.trigger("onChange").click();
 
-  // it('click on Challenge Dropdown "Select Difficulty" by Default', () => {
-  //   const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
-  //   dropdown.click({force: true});
-  // })
+      // Compare problem text to welcome text
+      cy.get('.view-lines')
+      .invoke('text')
+      .should((text2) => {
+        expect(text1).not.to.eq(text2)
+      });
+    })
+  })
 
-  // it('click on "Easy" dropdown option', () => {
-  //   const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
-  //   dropdown_option.trigger("onChange").click();
-  // })
+  it('test that skip button shows a new question', () => {
+    let skip_svg_class = "sc-cabOPr";
+    
+    cy.get('.view-lines')
+    .invoke('text')
+    .then((text1) => {
+      
+      // Click skip button
+      cy.get("svg." + skip_svg_class).click({force: true});
+      cy.wait(laoding_time);
 
-  // it('test that skip button is enabled', () => {
-  //   cy.get('svg').get('.sc-cabOPr kHQtFW').should('not.be.disabled');
-  // })
-
-  // it('click skip button', () => {
-  //   cy.get('svg').get('.sc-cabOPr kHQtFW').click();
-  // })
+      // Compare new problem text to old problem text and assert that it is different
+      cy.get('.view-lines')
+      .invoke('text')
+      .should((text2) => {
+        expect(text1).not.to.eq(text2);
+      });
+    })
+  })
 });
 
 describe('Get Challenge Hints Test', () => {
@@ -154,13 +187,36 @@ describe('Get Challenge Hints Test', () => {
     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
   })
 
-  it('click on "Compile and Execute" button', () => {
-    const compile_button = cy.findByText(/compile and execute/i);
-    compile_button.click();
+  it('switch to an easy challenge problem', () => {
+    cy.wait(laoding_time);
+    cy.get('.view-lines')
+    .invoke('text')
+    .then((text1) => {
+      expect(text1).to.eq(welcome_text);
+      
+      // Click on dropdown
+      const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
+      dropdown.click({force: true});
+      
+      // Click on easy dropdown option
+      const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
+      dropdown_option.trigger("onChange").click();
+
+      // Compare problem text to welcome text
+      cy.get('.view-lines')
+      .invoke('text')
+      .should((text2) => {
+        expect(text1).not.to.eq(text2)
+      });
+    })
   })
 
-  it('Check existance of output in window', () => {
-    const output_window = cy.findByText(/output/i).next();
-    output_window.should('have.text', 'ée');
+  it('test that hints show example solutions', () => {
+    let hints_svg_class = "sc-iTFTee";
+    let example_solution_tab_class = "sc-ipEyDJ";
+
+    cy.get("svg." + hints_svg_class).click();
+
+    cy.findByRole('dialog').findByText(/Example Solutions/i).next().should('have.class', example_solution_tab_class);
   })
 });
