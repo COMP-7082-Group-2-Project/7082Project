@@ -213,7 +213,7 @@ describe('Skip Challenge Problem Test', () => {
   })
 });
 
-describe('Get Challenge Hints Test', () => {
+describe('Get Challenge Example Solutions Test', () => {
   it('Open Webpage', () => {
     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
   })
@@ -242,7 +242,7 @@ describe('Get Challenge Hints Test', () => {
     })
   })
 
-  it('test that hints show example solutions', () => {
+  it('test that the example soluton button shows at least one example solution', () => {
     let hints_svg_class = "sc-iTFTee";
     let example_solution_tab_class = "sc-ipEyDJ";
 
