@@ -89,7 +89,7 @@ describe('Choose Challenge Difficulty Test', () => {
     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
   })
 
-  it('Test that text in code editor before selecting challenge problem to after selecting challenge problem canged', () => {
+  it('Test that text in code editor before selecting challenge problem to after selecting challenge problem changed', () => {
     cy.wait(loading_time);
     cy.get('.view-lines')
     // cy.get('.view-lines:nth-child(2)')
