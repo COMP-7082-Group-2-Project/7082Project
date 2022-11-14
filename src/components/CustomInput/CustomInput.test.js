@@ -6,9 +6,9 @@ import CustomInput from "./index";
 test("Renders the CustomInput component", () => {
     render(<CustomInput />);
 
-    // Select the accordion
+    // Select the custom input
     const customInput = screen.getByTestId("custom-input");
 
-    // Check if accordion is in the document
+    // Check if the custom input field is in the document
     expect(customInput).toBeInTheDocument();
 })

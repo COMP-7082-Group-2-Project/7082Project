@@ -9,7 +9,7 @@ test("Renders the Output Details", () => {
     // Select the Output Details
     const outputDetails = screen.getByTestId("output-details");
 
-    // Check if Info Section is in the document
+    // Check if Output Details are in the document
     expect(outputDetails).toBeInTheDocument();
 })
 

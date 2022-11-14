@@ -1,9 +1,7 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CodeEditor from "./index";
-import Landing from "../Landing";
 import { act } from "react-test-renderer";
-import axios from "axios";
 
 const javascriptDefault = `/*
 Welcome to EdiCode! 

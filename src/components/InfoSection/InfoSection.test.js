@@ -6,7 +6,7 @@ import InfoSection from "./index";
 test("Renders the Info Section", () => {
     render(<InfoSection />);
 
-    // Select the accordion
+    // Select the info section
     const infoSection = screen.getByTestId("info-section");
 
     // Check if Info Section is in the document

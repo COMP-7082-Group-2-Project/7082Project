@@ -1,7 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom'
 import Landing from "./index";
-
 
 // Check if Landing page renders
 test("Renders the Landing page", () => {
