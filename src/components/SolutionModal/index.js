@@ -4,7 +4,7 @@ import { SolutionModal, CloseIcon } from "./SolutionModalStyles";
 
 const HintModal = ({ showHint, setShowHint, currentProblem }) => {
     return (
-        <>
+        <div data-testid="solution-modal">
             {currentProblem && (
                 <SolutionModal show={showHint} onHide={() => setShowHint(false)}>
                     <SolutionModal.Header>
@@ -18,7 +18,7 @@ const HintModal = ({ showHint, setShowHint, currentProblem }) => {
                     </SolutionModal.Footer>
                 </SolutionModal>
             )}
-        </>
+        </div>
     )
 }
 

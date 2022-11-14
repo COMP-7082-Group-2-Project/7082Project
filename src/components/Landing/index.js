@@ -359,7 +359,7 @@ const Landing = () => {
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}
                                 />
-                                <Circle onClick={handleCopy}>
+                                <Circle onClick={handleCopy} data-testid="clipboard-btn">
                                     <ClipboardIcon />
                                 </Circle>
                             </Tab>
@@ -380,11 +380,15 @@ const Landing = () => {
                                 <SkipButton
                                     disabled={freeMode}
                                     onClick={() => randomizeProblem(startComments[language.value], endComments[language.value], difficulty)} />
-                                <HintButton disabled={freeMode} onClick={showHintModal} />
+                                <HintButton
+                                    data-testid="solution-btn"
+                                    disabled={freeMode}
+                                    onClick={showHintModal}
+                                />
                                 <ExecuteButton
-                                data-testid="execute-button" 
-                                onClick={handleCompile}
-                                disabled={!code}>
+                                    data-testid="execute-button"
+                                    onClick={handleCompile}
+                                    disabled={!code}>
                                     {processing ? "Processing..." : "Compile and Execute"}
                                 </ExecuteButton>
                                 <SubmitButton src={SubmitImage} alt="Submit" disabled={freeMode} onClick={handleSubmit} />

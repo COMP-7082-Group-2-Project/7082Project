@@ -35,7 +35,9 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
     return (
         <SubmitModal show={submitting} onHide={resetModal}>
             <SubmitModal.Header>
-                <SubmitModal.Title>{headerText}</SubmitModal.Title>
+                <SubmitModal.Title>
+                    {headerText}
+                </SubmitModal.Title>
             </SubmitModal.Header>
             <SubmitModal.Body>
                 {numPassed !== null ? (
