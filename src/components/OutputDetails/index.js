@@ -5,7 +5,7 @@ import {
 
 const OutputDetails = ({ outputDetails }) => {
     return (
-        <MetricsContainer>
+        <MetricsContainer data-testid="output-details">
             <MetricsLabel>
                 Status:{" "}
                 <MetricsResult>

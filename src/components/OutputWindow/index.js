@@ -25,12 +25,12 @@ const OutputWindow = ({ outputDetails }) => {
     }
 
     return (
-        <>
+        <div data-testid="output-window">
             <OutputTitle>Output</OutputTitle>
             <OutputScreen>
                 {outputDetails ? getOutput() : null}
             </OutputScreen>
-        </>
+        </div>
     )
 }
 

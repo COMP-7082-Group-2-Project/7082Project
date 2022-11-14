@@ -157,6 +157,9 @@ const Landing = () => {
     }, []);
 
     const handleCompile = useCallback(async () => {
+        // If user is already processing, do nothing
+        if (processing) return;
+
         setProcessing(true);
 
         // Form data to send
@@ -172,7 +175,7 @@ const Landing = () => {
             console.log(err);
             setProcessing(false);
         })
-    }, [language, code, customInput, checkStatus]);
+    }, [language, code, customInput, checkStatus, processing]);
 
     // Key press handlers
     useEffect(() => {
