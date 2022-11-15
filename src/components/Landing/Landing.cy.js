@@ -38,7 +38,7 @@ describe("<Landing />", () => {
         });
     });
 
-    it.only("Check if Code Compiled", () => {
+    it("Check if Code Compiled", () => {
         cy.mount(<Landing />);
 
         // Go to last line of editor
