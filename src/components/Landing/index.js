@@ -391,6 +391,7 @@ const Landing = () => {
                                 />
                                 <ExecuteButton
                                     data-testid="execute-button"
+                                    data-cy="execute-button"
                                     onClick={handleCompile}
                                     disabled={!code}>
                                     {processing ? "Processing..." : "Compile and Execute"}

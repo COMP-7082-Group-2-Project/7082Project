@@ -35,6 +35,10 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
 
     return (
         <CodeContainer id="code-editor">
+            {/* Label off screen to show language */}
+            <label data-cy="language-label" style={{ display: "none" }}>
+                {language || "javascript"}
+            </label>
             {mode === "free" ? (
                 <Editor
                     height="75vh"

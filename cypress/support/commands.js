@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import 'cypress-real-events'
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite

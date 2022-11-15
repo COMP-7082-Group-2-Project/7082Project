@@ -25,6 +25,38 @@ describe("<Landing />", () => {
     });
 
     // TODO: Check if Copy To Clipboard button works
+    it("Check if Copy To Clipboard button works", () => {
+        cy.mount(<Landing />);
+
+        cy.get("#clipboard-button").realClick();
+
+        // Access clipboard
+        cy.window().then((win) => {
+            win.navigator.clipboard.readText().then((text) => {
+                expect(text).to.contain("Welcome to EdiCode!");
+            });
+        });
+    });
+
+    it.only("Check if Code Compiled", () => {
+        cy.mount(<Landing />);
+
+        // Go to last line of editor
+        for (let i = 0; i < 11; i++) {
+            cy.get("#code-editor textarea").type("{downArrow}");
+        }
+
+        // Type in editor
+        cy.get("#code-editor textarea").type("console.log('Hello World!')");
+
+        cy.wait(1000);
+
+        // Click on the Compile and Execute button
+        cy.get("[data-cy=execute-button]").click();
+
+        // Check if code successfully compiled
+        cy.wait(4000).findByText("Hello World!").should("exist");
+    })
 
     it("Check if Solution Button renders", () => {
         cy.mount(<Landing />);
@@ -91,5 +123,18 @@ describe("<Landing />", () => {
 
         // Check if Code Editor now has "Welcome to EdiCode" in it
         cy.get("textarea").should("contain.value", "Welcome to EdiCode");
+    })
+
+    it("Check if Code Editor value changes when switching languages", () => {
+        cy.mount(<Landing />);
+
+        // Change difficulty to enter challenge mode
+        cy.get("#difficulty-select").type("{enter}");
+
+        // Change language
+        cy.get("#language-select").type("{downArrow}{downArrow}{downArrow}{downArrow}{enter}");
+
+        // Check if Code Editor now has "#include <stdio.h>" in it
+        cy.findByText("#include <stdio.h>").should("exist");
     })
 });
