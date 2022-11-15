@@ -21,7 +21,7 @@ const Accordion = ({ id, explanations }) => {
         <>
             <IconContext.Provider value={{ color: '#00ffb9', size: '25px' }}>
                 <AccordionSection>
-                    <AccordionContainer data-testid="accordion">
+                    <AccordionContainer id="accordion">
                         <SolutionHeading>Example Solutions</SolutionHeading>
                         {headings.map((heading, idx) => {
                             return (
@@ -44,7 +44,7 @@ const Accordion = ({ id, explanations }) => {
                                                 </NavWrapper>
 
                                                 <CodeImage
-                                                    data-testid="code-image"
+                                                    id="code-image"
                                                     src={require(`../../assets/images/${id}-${heading}.png`)}
                                                     alt={`${heading} Challenge Solution`} />
                                             </Body>

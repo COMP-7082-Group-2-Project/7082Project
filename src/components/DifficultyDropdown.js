@@ -27,18 +27,17 @@ const DifficultyDropdown = ({ onDifficultyChange, language, freeMode }) => {
     }, [freeMode])
 
     return (
-        <div data-testid="difficulty-dropdown-wrapper">
-            <Select
-                placeholder={`Select Difficulty`}
-                value={selectedOption}
-                options={DifficultyOptions}
-                styles={CustomStyles}
-                defaultValue={DifficultyOptions[0]}
-                onChange={handleChange}
-                isDisabled={!supportedLanguages.includes(language)}
-                isOptionDisabled={(option) => option === selectedOption}
-            />
-        </div>
+        <Select
+            id="difficulty-select"
+            placeholder={`Select Difficulty`}
+            value={selectedOption}
+            options={DifficultyOptions}
+            styles={CustomStyles}
+            defaultValue={DifficultyOptions[0]}
+            onChange={handleChange}
+            isDisabled={!supportedLanguages.includes(language)}
+            isOptionDisabled={(option) => option === selectedOption}
+        />
     )
 }
 

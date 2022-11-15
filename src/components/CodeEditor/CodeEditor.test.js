@@ -25,27 +25,6 @@ jest.mock("@monaco-editor/react", () => ({ onChange, language, code, mode }) => 
     );
 });
 
-// Check if Code Editor renders on page load
-test("Renders the Code Editor", () => {
-    render(<CodeEditor />);
-
-    // Select the Code Editor
-    const codeEditor = screen.getByTestId("code-editor");
-
-    // Check if Code Editor is in the document
-    expect(codeEditor).toBeInTheDocument();
-})
-
-test("Check if Code Editor has Welcome Message", async () => {
-    render(<CodeEditor mode="free" />);
-
-    // Select the Code Editor
-    const codeEditor = screen.getByTestId("mock-editor");
-
-    // Check if Code Editor has Welcome Message
-    expect(codeEditor).toHaveValue(javascriptDefault);
-})
-
 test("Check if Code Editor loads default language", () => {
     render(<CodeEditor mode="free" />);
 

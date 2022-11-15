@@ -341,6 +341,7 @@ const Landing = () => {
 
                     <FreeCodeWrapper>
                         <Form.Check
+                            data-cy="switch"
                             type="switch"
                             label="Free Code"
                             value={freeMode}
@@ -362,7 +363,7 @@ const Landing = () => {
                                     theme={theme.value}
                                     mode={freeMode ? "free" : "challenge"}
                                 />
-                                <Circle onClick={handleCopy} data-testid="clipboard-btn">
+                                <Circle onClick={handleCopy} id="clipboard-button">
                                     <ClipboardIcon />
                                 </Circle>
                             </Tab>
@@ -384,7 +385,7 @@ const Landing = () => {
                                     disabled={freeMode}
                                     onClick={() => randomizeProblem(startComments[language.value], endComments[language.value], difficulty)} />
                                 <HintButton
-                                    data-testid="solution-btn"
+                                    id="solution-button"
                                     disabled={freeMode}
                                     onClick={showHintModal}
                                 />

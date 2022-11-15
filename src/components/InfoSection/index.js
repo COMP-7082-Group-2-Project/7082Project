@@ -33,7 +33,7 @@ const InfoSection = () => {
                     <MainText>
                         We support all the popular programming languages, including:
                     </MainText>
-                    <LanguageList>
+                    <LanguageList data-cy="language-list">
                         <LanguageItem>JavaScript<JavaScriptIcon /></LanguageItem>
                         <LanguageItem>Python<PythonIcon /></LanguageItem>
                         <LanguageItem>C++<CPlusPlusIcon /></LanguageItem>
@@ -68,7 +68,7 @@ const InfoSection = () => {
                 </ButtonInfoWrapper>
                 <ButtonInfoWrapper>
                     <h3>Ready to test your solution? Click</h3>
-                    <SubmitIcon src={SubmitImage} alt="Submit" />
+                    <SubmitIcon src={SubmitImage} alt="Submit HowTo" />
                 </ButtonInfoWrapper>
 
                 <FreeWrite>

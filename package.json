@@ -33,6 +33,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "globals": {
+      "cy": true,
+      "Cypress": true
+    },
     "extends": [
       "react-app",
       "react-app/jest"

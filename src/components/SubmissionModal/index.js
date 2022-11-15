@@ -43,10 +43,13 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
                 {numPassed !== null ? (
                     <Wrapper>
                         {numPassed === 3 ? (
-                            <CheckmarkIcon className="animate__animated animate__flip" />
+                            <CheckmarkIcon
+                                data-cy="checkmark"
+                                className="animate__animated animate__flip" />
                         ) : (
                             // If the challenge failed, show a red X
                             <CrossIcon
+                                data-cy="cross"
                                 className="animate__animated animate__wobble"
                                 viewBox="0 0 200 150">
                                 <circle
@@ -85,7 +88,7 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
                         <TestInfo>{numPassed} / 3 Test Cases Passed</TestInfo>
                     </Wrapper>
                 ) : (
-                    <SpinnerWrapper>
+                    <SpinnerWrapper data-cy="spinner">
                         <ClimbingBoxLoader color="#36d7b7" size={50} />
                     </SpinnerWrapper>
                 )}

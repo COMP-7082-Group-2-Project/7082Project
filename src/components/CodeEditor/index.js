@@ -34,7 +34,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
     };
 
     return (
-        <CodeContainer data-testid="code-editor">
+        <CodeContainer id="code-editor">
             {mode === "free" ? (
                 <Editor
                     height="75vh"
