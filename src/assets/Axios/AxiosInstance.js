@@ -1,11 +1,12 @@
 import axios from 'axios'
 
 const AxiosInstance = axios.create({
-    baseURL: "https://judge0-ce.p.rapidapi.com",
+    // baseURL: "https://judge0-ce.p.rapidapi.com",
+    baseURL: "http://edicode.westus3.cloudapp.azure.com:2358",
     params: { base64_encoded: "true", fields: "*" },
     headers: {
-        "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-        "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
+        // "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
+        // "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY
     }
 })
 

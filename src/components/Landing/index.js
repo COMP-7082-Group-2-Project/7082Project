@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { defineTheme } from "../../lib/defineTheme";
 import { LanguageOptions } from "../../data/LanguageOptions";
-import { javascriptDefault } from "../../lib/initialCode";
+import { languageSeparators, initialCode } from "../../lib/initialCode";
 
 import CodeEditor from "../CodeEditor";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -39,7 +39,7 @@ import { getCodeOutput, getCodeToken } from "../../api/ApiActions";
 
 const Landing = () => {
     // States, references (dev branch)
-    const [code, setCode] = useState(javascriptDefault);
+    const [code, setCode] = useState(languageSeparators["javascript"][0] + initialCode + languageSeparators["javascript"][1]);
     const [customInput, setCustomInput] = useState("");
     const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(null);
@@ -77,8 +77,11 @@ const Landing = () => {
         console.log("Selected Option...", sl);
         setLanguage(sl);
 
-        // If user is not in challenge mode, do nothing
-        if (freeMode) return;
+        // If user is not in challenge mode, change code to default code
+        if (freeMode) {
+            setCode(languageSeparators[sl.value][0] + initialCode + languageSeparators[sl.value][1]);
+            return
+        }
 
         const start = startComments[sl.value];
         const end = endComments[sl.value];

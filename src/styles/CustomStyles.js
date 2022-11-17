@@ -43,10 +43,10 @@ export const CustomStyles = {
         };
     },
 
-    placeholder: (defaultStyles) => {
+    placeholder: (defaultStyles, { isDisabled }) => {
         return {
             ...defaultStyles,
-            color: "#000",
+            color: isDisabled ? "grey" : "#000",
             fontSize: "0.8rem",
             lineHeight: "1.75rem",
         };
