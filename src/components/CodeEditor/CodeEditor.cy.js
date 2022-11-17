@@ -12,7 +12,12 @@ describe("<CodeEditor />", () => {
 
     it("Changes Code Editor content after typing", () => {
         cy.mount(<CodeEditor mode="free" />);
-        cy.get("textarea").type("console.log('Hello World!')");
+        cy.get("textarea")
+        .click()
+        .focused()
+        .type('{ctrl}a')
+        .type('{rightArrow}')
+        .type("console.log('Hello World!')");
         cy.get("textarea").should("contain.value", "console.log('Hello World!')");
     })
 
