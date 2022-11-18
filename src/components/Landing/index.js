@@ -54,6 +54,7 @@ const Landing = () => {
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
     const [userSolution, setUserSolution] = useState(null);
+    const [showError, setShowError] = useState(false);
 
     // Conditional Rendering
     const [showHint, setShowHint] = useState(false);
@@ -81,6 +82,23 @@ const Landing = () => {
 
         setFilteredLanguages(filteredLanguages);
     }, [currentProblem])
+
+    // Show toast for successful compile
+    useEffect(() => {
+        if (!outputDetails) return;
+        if (processing) return;
+        if (submitting) return;
+
+        showSuccessToast();
+    }, [processing, outputDetails, submitting]);
+
+    // Show error toast for failed compile
+    useEffect(() => {
+        if (submitting) return;
+        if (!showError) return;
+
+        showErrorToast();
+    }, [submitting, showError])
 
     // Key presses
     const enterPress = useKeyPress("Enter");
@@ -169,11 +187,17 @@ const Landing = () => {
 
             setProcessing(false);
             setOutputDetails(res);
-            showSuccessToast("Compiled Successfully!");
+
+            // Regex to remove only newlines at the start and end of a string
+            const regex = /^\s+|\s+$/g;
+
+            // Remove new lines, convert to ASCII, and split into test cases
+            setUserSolution(atob(res.stdout).replace(regex, "").split("\n"));
         }).catch(err => {
             console.log("err", err);
             setProcessing(false);
-            showErrorToast();
+            setSubmitting(false);
+            setShowError(true);
         })
     }, []);
 
@@ -229,27 +253,7 @@ const Landing = () => {
         }
 
         getCodeToken(formData).then((token) => {
-            getCodeOutput(token).then((res) => {
-                let statusId = res.status?.id;
-
-                if (statusId === 1 || statusId === 2) {
-                    // Still processing (try again)
-                    setTimeout(() => {
-                        checkStatus(token);
-                    }, 2000)
-
-                    return;
-                }
-
-                // Regex to remove only newlines at the start and end of a string
-                const regex = /^\s+|\s+$/g;
-
-                // Remove new lines, convert to ASCII, and split into test cases
-                setUserSolution(atob(res.stdout).replace(regex, "").split("\n"));
-            }).catch(err => {
-                console.log("err", err);
-                setSubmitting(false);
-            })
+            checkStatus(token);
         }).catch(err => {
             console.log(err);
             setSubmitting(false);
@@ -336,7 +340,8 @@ const Landing = () => {
                     start: startComments[language.value],
                     end: endComments[language.value]
                 }}
-                difficulty={difficulty} />
+                difficulty={difficulty}
+                setOutputDetails={setOutputDetails} />
 
             <LandingNav></LandingNav>
             <LandingContainer>
@@ -394,7 +399,7 @@ const Landing = () => {
                     </CodeWrapper>
 
                     <OutputContainer>
-                        <OutputWindow outputDetails={outputDetails} />
+                        <OutputWindow processing={processing} outputDetails={outputDetails} />
                         <InputWrapper>
                             <CustomInput
                                 customInput={customInput}

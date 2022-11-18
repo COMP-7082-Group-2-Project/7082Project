@@ -8,7 +8,7 @@ import {
 
 import "animate.css";
 
-const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSolution, randomizeProblem, comments, difficulty }) => {
+const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSolution, randomizeProblem, comments, difficulty, setOutputDetails }) => {
     const [numPassed, setNumPassed] = useState(null);
 
     useEffect(() => {
@@ -28,6 +28,7 @@ const SubmissionModal = ({ submitting, setSubmitting, expectedOutput, userSoluti
     const resetModal = () => {
         setSubmitting(false);
         setNumPassed(null);
+        setOutputDetails(null);
     }
 
     const headerText = numPassed === null ? "Submitting..." : numPassed === 3 ? "Challenge Passed!" : "Challenge Failed. Try Again!";
