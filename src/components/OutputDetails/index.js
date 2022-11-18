@@ -4,6 +4,7 @@ import {
 } from "./OutputDetailsStyles";
 
 const OutputDetails = ({ outputDetails }) => {
+    console.log(outputDetails);
     return (
         <MetricsContainer data-testid="output-details">
             <MetricsLabel>

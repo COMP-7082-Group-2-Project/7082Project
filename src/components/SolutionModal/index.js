@@ -4,7 +4,7 @@ import { SolutionModal, CloseIcon } from "./SolutionModalStyles";
 
 const HintModal = ({ showHint, setShowHint, currentProblem }) => {
     return (
-        <div data-testid="solution-modal">
+        <div data-cy="solution-modal">
             {currentProblem && (
                 <SolutionModal show={showHint} onHide={() => setShowHint(false)}>
                     <SolutionModal.Header>
@@ -14,7 +14,7 @@ const HintModal = ({ showHint, setShowHint, currentProblem }) => {
                         <Accordion id={currentProblem.id} explanations={currentProblem.explanations} />
                     </SolutionModal.Body>
                     <SolutionModal.Footer>
-                        <CloseIcon onClick={() => setShowHint(false)} />
+                        <CloseIcon data-cy="close-button" onClick={() => setShowHint(false)} />
                     </SolutionModal.Footer>
                 </SolutionModal>
             )}

@@ -27,7 +27,7 @@ const OutputWindow = ({ outputDetails }) => {
     return (
         <div data-testid="output-window">
             <OutputTitle>Output</OutputTitle>
-            <OutputScreen>
+            <OutputScreen data-cy="output-screen">
                 {outputDetails ? getOutput() : null}
             </OutputScreen>
         </div>
