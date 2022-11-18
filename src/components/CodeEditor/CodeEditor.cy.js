@@ -12,12 +12,12 @@ describe("<CodeEditor />", () => {
 
     it("Changes Code Editor content after typing", () => {
         cy.mount(<CodeEditor mode="free" />);
-        cy.get("textarea")
-        .click()
-        .focused()
-        .type('{ctrl}a')
-        .type('{rightArrow}')
-        .type("console.log('Hello World!')");
+
+        // Check OS of the machine
+        const isMac = Cypress.platform === "darwin";
+        
+        cy.get("textarea").type(isMac ? '{command}a{rightArrow}' : '{ctrl}a{rightArrow}');
+        cy.get("textarea").type("console.log('Hello World!')");
         cy.get("textarea").should("contain.value", "console.log('Hello World!')");
     })
 
