@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { defineTheme } from "../../lib/defineTheme";
 import { LanguageOptions } from "../../data/LanguageOptions";
-import { javascriptDefault } from "../../lib/initialCode";
+import { languageSeparators, initialCode } from "../../lib/initialCode";
 
 import CodeEditor from "../CodeEditor";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -39,12 +39,13 @@ import { getCodeOutput, getCodeToken } from "../../api/ApiActions";
 
 const Landing = () => {
     // States, references (dev branch)
-    const [code, setCode] = useState(javascriptDefault);
+    const [code, setCode] = useState(languageSeparators["javascript"][0] + initialCode + languageSeparators["javascript"][1]);
     const [customInput, setCustomInput] = useState("");
     const [outputDetails, setOutputDetails] = useState(null);
     const [processing, setProcessing] = useState(null);
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
+    const [filteredLanguages, setFilteredLanguages] = useState(null);
     const [expectedOutput, setExpectedOutput] = useState("");
     const [freeMode, setFreeMode] = useState(true);
     const [challengeProblems, setChallengeProblems] = useState([]);
@@ -53,6 +54,7 @@ const Landing = () => {
     const [currentProblem, setCurrentProblem] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
     const [userSolution, setUserSolution] = useState(null);
+    const [showError, setShowError] = useState(false);
 
     // Conditional Rendering
     const [showHint, setShowHint] = useState(false);
@@ -69,6 +71,35 @@ const Landing = () => {
         })
     }, [])
 
+    // Set supported languages based on current problem
+    useEffect(() => {
+        if (!currentProblem) return;
+
+        // Disable languages that are not supported by the problem
+        const filteredLanguages = LanguageOptions.filter(l => {
+            return currentProblem.languages.includes(l.value);
+        });
+
+        setFilteredLanguages(filteredLanguages);
+    }, [currentProblem])
+
+    // Show toast for successful compile
+    useEffect(() => {
+        if (!outputDetails) return;
+        if (processing) return;
+        if (submitting) return;
+
+        showSuccessToast();
+    }, [processing, outputDetails, submitting]);
+
+    // Show error toast for failed compile
+    useEffect(() => {
+        if (submitting) return;
+        if (!showError) return;
+
+        showErrorToast();
+    }, [submitting, showError])
+
     // Key presses
     const enterPress = useKeyPress("Enter");
     const ctrlPress = useKeyPress("Control");
@@ -77,8 +108,16 @@ const Landing = () => {
         console.log("Selected Option...", sl);
         setLanguage(sl);
 
-        // If user is not in challenge mode, do nothing
-        if (freeMode) return;
+        // If user is not in challenge mode, change code to default code
+        if (freeMode) {
+            if (!languageSeparators[sl.value]) {
+                setCode(initialCode);
+                return;
+            }
+
+            setCode(languageSeparators[sl.value][0] + initialCode + languageSeparators[sl.value][1]);
+            return
+        }
 
         const start = startComments[sl.value];
         const end = endComments[sl.value];
@@ -148,11 +187,17 @@ const Landing = () => {
 
             setProcessing(false);
             setOutputDetails(res);
-            showSuccessToast("Compiled Successfully!");
+
+            // Regex to remove only newlines at the start and end of a string
+            const regex = /^\s+|\s+$/g;
+
+            // Remove new lines, convert to ASCII, and split into test cases
+            setUserSolution(atob(res.stdout).replace(regex, "").split("\n"));
         }).catch(err => {
             console.log("err", err);
             setProcessing(false);
-            showErrorToast();
+            setSubmitting(false);
+            setShowError(true);
         })
     }, []);
 
@@ -211,27 +256,7 @@ const Landing = () => {
         }
 
         getCodeToken(formData).then((token) => {
-            getCodeOutput(token).then((res) => {
-                let statusId = res.status?.id;
-
-                if (statusId === 1 || statusId === 2) {
-                    // Still processing (try again)
-                    setTimeout(() => {
-                        checkStatus(token);
-                    }, 2000)
-
-                    return;
-                }
-
-                // Regex to remove only newlines at the start and end of a string
-                const regex = /^\s+|\s+$/g;
-
-                // Remove new lines, convert to ASCII, and split into test cases
-                setUserSolution(atob(res.stdout).replace(regex, "").split("\n"));
-            }).catch(err => {
-                console.log("err", err);
-                setSubmitting(false);
-            })
+            checkStatus(token);
         }).catch(err => {
             console.log(err);
             setSubmitting(false);
@@ -318,13 +343,14 @@ const Landing = () => {
                     start: startComments[language.value],
                     end: endComments[language.value]
                 }}
-                difficulty={difficulty} />
+                difficulty={difficulty}
+                setOutputDetails={setOutputDetails} />
 
             <LandingNav></LandingNav>
             <LandingContainer>
                 <DropdownContainer>
                     <DropdownWrapper>
-                        <LanguageDropdown onSelectChange={onSelectChange} />
+                        <LanguageDropdown filteredLanguages={filteredLanguages} onSelectChange={onSelectChange} />
                     </DropdownWrapper>
                     <DropdownWrapper>
                         <ThemeDropdown
@@ -345,7 +371,10 @@ const Landing = () => {
                             type="switch"
                             label="Free Code"
                             value={freeMode}
-                            onChange={() => !freeMode && setFreeMode(!freeMode)}
+                            onChange={() => {
+                                !freeMode && setFreeMode(!freeMode)
+                                setFilteredLanguages(null);
+                            }}
                             checked={freeMode}
                             disabled={freeMode} />
                     </FreeCodeWrapper>
@@ -374,7 +403,7 @@ const Landing = () => {
                     </CodeWrapper>
 
                     <OutputContainer>
-                        <OutputWindow outputDetails={outputDetails} />
+                        <OutputWindow processing={processing} outputDetails={outputDetails} />
                         <InputWrapper>
                             <CustomInput
                                 customInput={customInput}

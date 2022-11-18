@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { CodeContainer } from "./CodeEditorStyles";
-import { javascriptDefault } from "../../lib/initialCode";
+import { languageSeparators, initialCode } from "../../lib/initialCode";
 
 const CodeEditor = ({ onChange, language, code, theme, mode }) => {
     // States, references
@@ -33,6 +33,12 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
         })
     };
 
+    const setDefaultValue = () => {
+        if (!languageSeparators[language]) return initialCode;
+
+        return languageSeparators[language][0] + initialCode + languageSeparators[language][1];
+    }
+
     return (
         <CodeContainer id="code-editor">
             {/* Label off screen to show language */}
@@ -46,7 +52,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     language={language || "javascript"}
                     value={value}
                     theme={theme}
-                    defaultValue={javascriptDefault}
+                    defaultValue={setDefaultValue()}
                     onChange={handleEditorChange}
                     options={{
                         wordWrap: "on",
@@ -61,7 +67,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                         editorRef.current = editor;
 
                         // Set the editor to javascript default code
-                        editor.setValue(javascriptDefault);
+                        editor.setValue(setDefaultValue());
                     }}
                 />
             ) : (<Editor
