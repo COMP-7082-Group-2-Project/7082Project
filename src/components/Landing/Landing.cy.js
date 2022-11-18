@@ -41,12 +41,10 @@ describe("<Landing />", () => {
     it("Check if Code Compiled", () => {
         cy.mount(<Landing />);
 
-        // Go to last line of editor
-        for (let i = 0; i < 11; i++) {
-            cy.get("#code-editor textarea").type("{downArrow}");
-        }
+        // Go to last line of editor and type "console.log('Hello World!')"
+        const isMac = Cypress.platform === "darwin";
 
-        // Type in editor
+        cy.get("#code-editor textarea").type(isMac ? '{command}a{rightArrow}' : '{ctrl}a{rightArrow}');
         cy.get("#code-editor textarea").type("console.log('Hello World!')");
 
         cy.wait(1000);
@@ -62,22 +60,6 @@ describe("<Landing />", () => {
         cy.mount(<Landing />);
         cy.get("#solution-button").should("exist");
     });
-
-    it("Check if Solution Button brings up Example Solutions", () => {
-        cy.mount(<Landing />);
-
-        // Change difficulty so that solution button is enabled
-        cy.get("#difficulty-select").type("{enter}");
-
-        // Wait for solution button to be enabled
-        cy.get("#solution-button").should("not.be.disabled");
-
-        // Click on solution button
-        cy.get("#solution-button").click();
-
-        // Check if example solutions are rendered
-        cy.findByText("Example Solutions").should("exist");
-    })
 
     it("Press Ctrl + Enter to submit code", () => {
         cy.mount(<Landing />);
@@ -132,9 +114,9 @@ describe("<Landing />", () => {
         cy.get("#difficulty-select").type("{enter}");
 
         // Change language
-        cy.get("#language-select").type("{downArrow}{downArrow}{downArrow}{downArrow}{enter}");
+        cy.get("#language-select").type("{downArrow}{enter}");
 
-        // Check if Code Editor now has "#include <stdio.h>" in it
-        cy.findByText("#include <stdio.h>").should("exist");
+        // Check if Code Editor now has "#include" in it
+        cy.findByText("#include").should("exist");
     })
 });
