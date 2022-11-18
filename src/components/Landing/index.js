@@ -45,6 +45,7 @@ const Landing = () => {
     const [processing, setProcessing] = useState(null);
     const [theme, setTheme] = useState("cobalt");
     const [language, setLanguage] = useState(LanguageOptions[0]);
+    const [filteredLanguages, setFilteredLanguages] = useState(null);
     const [expectedOutput, setExpectedOutput] = useState("");
     const [freeMode, setFreeMode] = useState(true);
     const [challengeProblems, setChallengeProblems] = useState([]);
@@ -68,6 +69,18 @@ const Landing = () => {
             console.log(err);
         })
     }, [])
+
+    // Set supported languages based on current problem
+    useEffect(() => {
+        if (!currentProblem) return;
+
+        // Disable languages that are not supported by the problem
+        const filteredLanguages = LanguageOptions.filter(l => {
+            return currentProblem.languages.includes(l.value);
+        });
+
+        setFilteredLanguages(filteredLanguages);
+    }, [currentProblem])
 
     // Key presses
     const enterPress = useKeyPress("Enter");
@@ -324,7 +337,7 @@ const Landing = () => {
             <LandingContainer>
                 <DropdownContainer>
                     <DropdownWrapper>
-                        <LanguageDropdown onSelectChange={onSelectChange} />
+                        <LanguageDropdown filteredLanguages={filteredLanguages} onSelectChange={onSelectChange} />
                     </DropdownWrapper>
                     <DropdownWrapper>
                         <ThemeDropdown
@@ -344,7 +357,10 @@ const Landing = () => {
                             type="switch"
                             label="Free Code"
                             value={freeMode}
-                            onChange={() => !freeMode && setFreeMode(!freeMode)}
+                            onChange={() => {
+                                !freeMode && setFreeMode(!freeMode)
+                                setFilteredLanguages(null);
+                            }}
                             checked={freeMode}
                             disabled={freeMode} />
                     </FreeCodeWrapper>
