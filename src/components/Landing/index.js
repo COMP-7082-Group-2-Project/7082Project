@@ -92,6 +92,11 @@ const Landing = () => {
 
         // If user is not in challenge mode, change code to default code
         if (freeMode) {
+            if (!languageSeparators[sl.value]) {
+                setCode(initialCode);
+                return;
+            }
+
             setCode(languageSeparators[sl.value][0] + initialCode + languageSeparators[sl.value][1]);
             return
         }

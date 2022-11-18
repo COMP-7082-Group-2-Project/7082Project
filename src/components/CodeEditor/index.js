@@ -33,6 +33,12 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
         })
     };
 
+    const setDefaultValue = () => {
+        if (!languageSeparators[language]) return initialCode;
+
+        return languageSeparators[language][0] + initialCode + languageSeparators[language][1];
+    }
+
     return (
         <CodeContainer>
             {mode === "free" ? (
@@ -42,7 +48,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                     language={language || "javascript"}
                     value={value}
                     theme={theme}
-                    defaultValue={languageSeparators[language][0] + initialCode + languageSeparators[language][1]}
+                    defaultValue={setDefaultValue()}
                     onChange={handleEditorChange}
                     options={{
                         wordWrap: "on",
@@ -57,7 +63,7 @@ const CodeEditor = ({ onChange, language, code, theme, mode }) => {
                         editorRef.current = editor;
 
                         // Set the editor to javascript default code
-                        editor.setValue(languageSeparators[language][0] + initialCode + languageSeparators[language][1]);
+                        editor.setValue(setDefaultValue());
                     }}
                 />
             ) : (<Editor
