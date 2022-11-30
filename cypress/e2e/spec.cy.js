@@ -9,7 +9,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   return false;
 });
 
-const loading_time = 2000;
+const loading_time = 2500;
 const welcome_text = "/*Welcome to EdiCode! This is a code editor that allows you to write, compile, and execute code right in your browser.Start coding by typing in the editor below. You can change the language or theme in the dropdown menus above.You can also start a coding challenge by choosing a difficulty level in the dropdown menu above.Happy coding!*/";
 
 describe('Write Code, Compile and Execute, and See Output Test.', () => {
@@ -47,17 +47,17 @@ describe('Select Different Programming Language Test', () => {
   })
 
   it('click on Language Dropdown "Javascript" by Default', () => {
-    const dropdown = cy.get('.css-fjipxn-control').contains('JavaScript');
+    const dropdown = cy.findByText('JavaScript (Node.js 12.14.0)');
     dropdown.click({force: true});
   })
 
   it('click on C language dropdown option', () => {
-    const dropdown_option = cy.get("#react-select-2-listbox").contains('C (Clang 7.0.1)');
+    const dropdown_option = cy.findByText('C (Clang 7.0.1)');
     dropdown_option.trigger("onChange").click();
   })
 
   it('test C langauge selected', () => {
-    const dropdown = cy.get('.css-qc6sy-singleValue').contains('C (Clang 7.0.1)');
+    const dropdown = cy.findByText('C (Clang 7.0.1)');
     dropdown.should('be.visible');
   })
 
@@ -68,6 +68,7 @@ describe('Select Different Programming Language Test', () => {
     .focused()
     .type('{ctrl}a')
     .type('{rightArrow}')
+    .type('{enter}')
     .type('int main() {')
     .type('{enter}')
     .type('printf("Hello World!");')
@@ -77,6 +78,8 @@ describe('Select Different Programming Language Test', () => {
 
     const compile_button = cy.findByText(/compile and execute/i);
     compile_button.click();
+
+    cy.wait(loading_time);
 
     const output_window = cy.findByText(/output/i).next();
     output_window.should('have.text', 'Hello World!');
@@ -98,11 +101,11 @@ describe('Choose Challenge Difficulty Test', () => {
       expect(text1).to.eq(welcome_text);
       
       // Click on dropdown
-      const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
+      const dropdown = cy.findByText('Select Difficulty');
       dropdown.click({force: true});
       
       // Click on easy dropdown option
-      const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
+      const dropdown_option = cy.findByText('Easy');
       dropdown_option.trigger("onChange").click();
 
       // Compare problem text to welcome text
@@ -135,18 +138,18 @@ describe('Change UI Theme Test', () => {
   // })
 
   it('click on Theme Dropdown', () => {
-    const dropdown = cy.get('.css-fjipxn-control').contains('Oceanic');;
+    const dropdown = cy.contains('Oceanic');;
     dropdown.click({force: true});
   })
 
   it('click on "Blackboard" dropdown option', () => {
-    const dropdown_option = cy.get("#react-select-3-listbox").contains('Blackboard');
+    const dropdown_option = cy.findByText('Blackboard');
     dropdown_option.trigger("onChange").click();
   })
 
   it('test Blackboard theme selected', () => {
     cy.wait(loading_time);
-    const dropdown = cy.get('.css-qc6sy-singleValue').contains('Blackboard');
+    const dropdown = cy.findByText('Blackboard');
     dropdown.should('be.visible');
   })
 
