@@ -140,9 +140,9 @@ const Landing = () => {
     }
 
     const randomizeProblem = (start, end, difficulty) => {
-        // Filter by language and difficulty (without mutating original array)
+        // Filter by language and difficulty (without mutating original array), don't include current problem
         const filteredProblems = challengeProblems.filter(p => {
-            return p.languages.includes(language.value) && p.difficulty.toLowerCase() === difficulty
+            return p.languages.includes(language.value) && p.difficulty.toLowerCase() === difficulty && p.id !== currentProblem?.id;
         });
 
         // Select random problem
