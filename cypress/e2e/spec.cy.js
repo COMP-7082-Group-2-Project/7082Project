@@ -154,11 +154,11 @@ describe('Skip Challenge Problem Test', () => {
       expect(text1).to.eq(welcome_text);
       
       // Click on dropdown
-      const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
+      const dropdown = cy.findByText('Select Difficulty');
       dropdown.click({force: true});
       
       // Click on easy dropdown option
-      const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
+      const dropdown_option = cy.findByText('Easy');
       dropdown_option.trigger("onChange").click();
 
       // Compare problem text to welcome text
@@ -204,11 +204,11 @@ describe('Get Challenge Example Solutions Test', () => {
       expect(text1).to.eq(welcome_text);
       
       // Click on dropdown
-      const dropdown = cy.get('#react-select-4-placeholder').contains('Select Difficulty');
+      const dropdown = cy.findByText('Select Difficulty');
       dropdown.click({force: true});
       
       // Click on easy dropdown option
-      const dropdown_option = cy.get("#react-select-4-listbox").contains('Easy');
+      const dropdown_option = cy.findByText('Easy');
       dropdown_option.trigger("onChange").click();
 
       // Compare problem text to welcome text
