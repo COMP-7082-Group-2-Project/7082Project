@@ -38,23 +38,25 @@ describe("<Landing />", () => {
         });
     });
 
-    it("Check if Code Compiled", () => {
-        cy.mount(<Landing />);
+    // it("Check if Code Compiled", () => {
+    //     cy.mount(<Landing />);
 
-        // Go to last line of editor and type "console.log('Hello World!')"
-        const isMac = Cypress.platform === "darwin";
+    //     // Go to last line of editor and type "console.log('Hello World!')"
+    //     const isMac = Cypress.platform === "darwin";
 
-        cy.get("#code-editor textarea").type(isMac ? '{command}a{rightArrow}' : '{ctrl}a{rightArrow}');
-        cy.get("#code-editor textarea").type("console.log('Hello World!')");
+    //     cy.get("#code-editor textarea").type(isMac ? '{command}a{rightArrow}' : '{ctrl}a{rightArrow}');
+    //     cy.get("#code-editor textarea").type("console.log('Hello World!')");
 
-        cy.wait(1000);
+    //     cy.wait(1000);
 
-        // Click on the Compile and Execute button
-        cy.get("[data-cy=execute-button]").click();
+    //     // Click on the Compile and Execute button
+    //     cy.get("[data-cy=execute-button]").click();
 
-        // Check if code successfully compiled
-        cy.wait(4000).findByText("Hello World!").should("exist");
-    })
+    //     cy.scrollTo(0, 0);
+
+    //     // Check if code successfully compiled
+    //     cy.wait(4000).findByText("Hello World!").should("exist");
+    // })
 
     it("Check if Solution Button renders", () => {
         cy.mount(<Landing />);
