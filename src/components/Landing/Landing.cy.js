@@ -1,6 +1,7 @@
 import Landing from "../Landing";
 
 describe("<Landing />", () => {
+    // Before
     beforeEach(() => {
         cy.viewport(1920, 1080)
     })
