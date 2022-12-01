@@ -62,7 +62,7 @@ const Landing = () => {
 
     // Get challenge problems from backend on page load
     useEffect(() => {
-        axios.get("https://alkarimj1997.github.io/data/challenge_problems_test.json").then((res) => {
+        axios.get("https://alkarimj1997.github.io/data/challenge_problems.json").then((res) => {
             setChallengeProblems(res.data.problems);
             setStartComments(res.data.start_comment);
             setEndComments(res.data.end_comment);
