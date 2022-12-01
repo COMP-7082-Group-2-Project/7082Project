@@ -123,19 +123,6 @@ describe('Change UI Theme Test', () => {
     cy.visit('https://transcendent-tarsier-75164d.netlify.app/');
     
   })
-  
-  // it('Test Default Theme "Oceanic Next"', () => {
-  //   cy.findByRole('code').get('.monaco-editor').then($el => {
-  //     const win = cy.state('window')
-  //     const styles = win.getComputedStyle($el[0])
-  //     const transform = styles.getPropertyValue('transform')
-  //     console.log(transform)
-  //     // expect(transform).to.eq(...)
-  //   })
-
-  //   cy.wait(loading_time);
-  //   //.should('have.css', '--vscode-editor-background', '#1b2b34')
-  // })
 
   it('click on Theme Dropdown', () => {
     const dropdown = cy.contains('Oceanic');;
@@ -152,18 +139,6 @@ describe('Change UI Theme Test', () => {
     const dropdown = cy.findByText('Blackboard');
     dropdown.should('be.visible');
   })
-
-  // it('test Blackboard theme applied', () => {
-    
-  //   cy.findByRole('code').get('.monaco-editor').then($el => {
-  //     const win = cy.state('window')
-  //     const styles = win.getComputedStyle($el[0])
-  //     const transform = styles.getPropertyValue('transform')
-  //     console.log(transform)
-  //   })
-  //   --vscode-editor-background: #1b2b34
-  //   --vscode-editor-background: #0c1021
-  // })
 });
 
 describe('Skip Challenge Problem Test', () => {
