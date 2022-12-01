@@ -62,7 +62,7 @@ const Landing = () => {
 
     // Get challenge problems from backend on page load
     useEffect(() => {
-        axios.get("https://alkarimj1997.github.io/data/challenge_problems.json").then((res) => {
+        axios.get("https://alkarimj1997.github.io/data/challenge_problems_test.json").then((res) => {
             setChallengeProblems(res.data.problems);
             setStartComments(res.data.start_comment);
             setEndComments(res.data.end_comment);
@@ -126,6 +126,15 @@ const Landing = () => {
         const { problem_statement, body } = currentProblem;
 
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[sl.value].join("\n")}`);
+
+        if (!currentProblem) return;
+
+        if (Array.isArray(currentProblem.answer)) {
+            setExpectedOutput(currentProblem.answer.join("\n"));
+            return;
+        }
+
+        setExpectedOutput(currentProblem.answer[sl.value].join("\n"));
     }
 
     const onChange = (action, data) => {
@@ -155,7 +164,13 @@ const Landing = () => {
         const { problem_statement, body } = randomProblem;
 
         setCode(`${start}\n${problem_statement.join("\n")}\n${end}\n\n${body[language.value].join("\n")}`);
-        setExpectedOutput(randomProblem.answer.join("\n"));
+
+        if (Array.isArray(randomProblem.answer)) {
+            setExpectedOutput(randomProblem.answer.join("\n"));
+            return;
+        }
+
+        setExpectedOutput(randomProblem.answer[language.value].join("\n"));
     }
 
     const onDifficultyChange = (sd) => {
