@@ -30,6 +30,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "cypress open",
+    "component-test": "cypress run --component",
     "e2e-test": "cypress run",
     "eject": "react-scripts eject"
   },
