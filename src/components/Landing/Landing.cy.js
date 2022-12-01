@@ -52,6 +52,8 @@ describe("<Landing />", () => {
         // Click on the Compile and Execute button
         cy.get("[data-cy=execute-button]").click();
 
+        cy.scrollTo(0, 0);
+
         // Check if code successfully compiled
         cy.wait(4000).findByText("Hello World!").should("exist");
     })
