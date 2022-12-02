@@ -1,5 +1,6 @@
 import { loader } from "@monaco-editor/react";
 
+// Comment to show CI/CD Pipeline working
 const monacoThemes = {
     "active4d": "Active4D",
     "all-hallows-eve": "All Hallows Eve",
